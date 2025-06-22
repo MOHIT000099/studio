@@ -13,6 +13,8 @@ export const allPriests: Priest[] = [
     phone: '919876543210',
     whatsapp: '919876543210',
     verified: true,
+    qualifications: 'Jyotish Acharya, Vastu Shastra Certified',
+    showQualifications: true,
   },
   {
     id: '2',
@@ -26,6 +28,8 @@ export const allPriests: Priest[] = [
     phone: '919876543211',
     whatsapp: '919876543211',
     verified: true,
+    qualifications: 'Shastri from Sampurnanand Sanskrit University',
+    showQualifications: true,
   },
   {
     id: '3',
@@ -39,6 +43,8 @@ export const allPriests: Priest[] = [
     phone: '919876543212',
     whatsapp: '919876543212',
     verified: true,
+    qualifications: 'PhD in Sanskrit, specialization in Yajurveda',
+    showQualifications: false,
   },
   {
     id: '4',
@@ -52,6 +58,8 @@ export const allPriests: Priest[] = [
     phone: '919876543213',
     whatsapp: '919876543213',
     verified: true,
+    qualifications: 'Proficient in Telugu and Tamil rituals',
+    showQualifications: true,
   },
   {
     id: '5',
@@ -65,6 +73,8 @@ export const allPriests: Priest[] = [
     phone: '919876543214',
     whatsapp: '919876543214',
     verified: true,
+    qualifications: '15 years experience in Shakta traditions.',
+    showQualifications: true,
   },
   {
     id: '6',
@@ -78,6 +88,8 @@ export const allPriests: Priest[] = [
     phone: '919876543215',
     whatsapp: '919876543215',
     verified: true,
+    qualifications: 'Expert in Gujarati customs and rituals.',
+    showQualifications: false,
   },
   {
     id: '7',
@@ -92,6 +104,8 @@ export const allPriests: Priest[] = [
     whatsapp: '919876543216',
     verified: true,
     pendingApproval: true,
+    qualifications: 'Sangeet Visharad, can perform musical pujas.',
+    showQualifications: true,
   },
    {
     id: '8',
@@ -106,6 +120,8 @@ export const allPriests: Priest[] = [
     whatsapp: '919876543217',
     verified: false,
     pendingApproval: true,
+    qualifications: 'Family has served as royal priests for generations.',
+    showQualifications: true,
   },
 ];
 

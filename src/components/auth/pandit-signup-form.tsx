@@ -15,6 +15,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { FileUp, User, BookUser, ShieldCheck } from 'lucide-react';
 import { handleSimpleAuth } from '@/lib/actions';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Switch } from '@/components/ui/switch';
 
 export function PanditSignupForm() {
   return (
@@ -92,8 +93,17 @@ export function PanditSignupForm() {
                   <p className="text-xs text-muted-foreground">Separate services with a comma.</p>
                 </div>
                 <div className="grid gap-2">
+                  <Label htmlFor="qualifications">Qualifications</Label>
+                  <Textarea id="qualifications" name="qualifications" placeholder="e.g., Jyotish Acharya, Vastu Shastra Certified" />
+                  <p className="text-xs text-muted-foreground">List your degrees, certifications, or specializations.</p>
+                </div>
+                 <div className="grid gap-2">
                   <Label htmlFor="bio">About You / Bio</Label>
                   <Textarea id="bio" name="bio" placeholder="Tell users about your experience and approach." required />
+                </div>
+                <div className="flex items-center space-x-2 rounded-md border p-3">
+                    <Switch id="show-qualifications" name="show-qualifications" defaultChecked />
+                    <Label htmlFor="show-qualifications" className="flex-1">Show my qualifications publicly on my profile</Label>
                 </div>
               </div>
             </TabsContent>

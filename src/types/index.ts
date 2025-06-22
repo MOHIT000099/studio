@@ -11,4 +11,6 @@ export interface Priest {
   whatsapp: string;
   verified: boolean;
   pendingApproval?: boolean;
+  qualifications: string;
+  showQualifications: boolean;
 }

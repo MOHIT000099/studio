@@ -98,7 +98,7 @@ export default function DashboardClient({
                       Review the complete information submitted for verification.
                     </DialogDescription>
                   </DialogHeader>
-                  <div className="space-y-4 py-4">
+                  <div className="space-y-4 py-4 max-h-[60vh] overflow-y-auto pr-4">
                     <div className="flex items-center gap-4">
                       <Image
                         src={pandit.photo}
@@ -121,13 +121,18 @@ export default function DashboardClient({
                       <h4 className="font-semibold mb-2">Services</h4>
                       <p className="text-sm text-muted-foreground">{pandit.services.join(', ')}</p>
                     </div>
+                     <div>
+                      <h4 className="font-semibold mb-2">Qualifications</h4>
+                      <p className="text-sm text-muted-foreground">{pandit.qualifications || 'Not provided'}</p>
+                      <p className="text-xs text-muted-foreground mt-1">Publicly visible: {pandit.showQualifications ? 'Yes' : 'No'}</p>
+                    </div>
                     <div>
                       <h4 className="font-semibold mb-2">Contact</h4>
                       <p className="text-sm text-muted-foreground">Phone: {pandit.phone}</p>
                       <p className="text-sm text-muted-foreground">WhatsApp: {pandit.whatsapp}</p>
                     </div>
                   </div>
-                  <DialogFooter className="sm:justify-start gap-2">
+                  <DialogFooter className="sm:justify-start gap-2 mt-4">
                     <DialogClose asChild>
                         <Button
                             type="button"

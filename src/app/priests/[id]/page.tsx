@@ -7,6 +7,7 @@ import {
   MessageCircle,
   CheckCircle,
   Sparkles,
+  GraduationCap,
 } from 'lucide-react';
 import { allPriests } from '@/data/priests';
 import { Badge } from '@/components/ui/badge';
@@ -96,6 +97,20 @@ export default function PriestDetailPage({ params }: { params: { id: string } })
               </div>
             </CardContent>
           </Card>
+
+          {priest.showQualifications && priest.qualifications && (
+            <Card className="mt-8">
+              <CardHeader>
+                <CardTitle className="font-headline text-2xl flex items-center">
+                  <GraduationCap className="h-6 w-6 mr-3 text-primary" />
+                  Qualifications
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-foreground/80">{priest.qualifications}</p>
+              </CardContent>
+            </Card>
+          )}
         </div>
       </div>
     </div>

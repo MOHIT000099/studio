@@ -149,3 +149,60 @@ export async function handleReviewSubmit(
         success: true,
     };
 }
+
+
+const panditSignupSchema = z.object({
+    name: z.string().min(2, "Name is too short."),
+    email: z.string().email("Please provide a valid email."),
+    phone: z.string().min(10, 'Please provide a valid 10-digit mobile number.').max(15, 'Mobile number is too long.'),
+    password: z.string().min(6, "Password must be at least 6 characters."),
+    city: z.string(),
+    location: z.string().min(3, "Please provide a valid location."),
+    services: z.string().min(3, "Please list at least one service."),
+    qualifications: z.string(),
+    bio: z.string().min(20, "Bio is too short."),
+    showQualifications: z.preprocess((val) => val === 'on' || val === true, z.boolean()),
+});
+
+export type PanditSignupFormState = {
+    message: string;
+    errors?: {
+        name?: string[];
+        email?: string[];
+        phone?: string[];
+        password?: string[];
+        location?: string[];
+        services?: string[];
+        bio?: string[];
+    };
+    success: boolean;
+};
+
+export async function handlePanditSignup(
+    prevState: PanditSignupFormState,
+    formData: FormData
+): Promise<PanditSignupFormState> {
+    const validatedFields = panditSignupSchema.safeParse(
+        Object.fromEntries(formData.entries())
+    );
+
+    if (!validatedFields.success) {
+        return {
+            message: "Validation failed. Please check your inputs.",
+            errors: validatedFields.error.flatten().fieldErrors,
+            success: false,
+        };
+    }
+
+    // In a real app, you would save this to a database
+    // and handle file uploads for aadhaar/selfie.
+    console.log("New pandit signup submitted for verification:", validatedFields.data);
+
+    // This is a prototype, so we just simulate success.
+    // We would also need to handle the aadhaar and selfie file uploads here.
+    
+    return {
+        message: "Thank you! Your profile has been submitted for verification.",
+        success: true,
+    };
+}

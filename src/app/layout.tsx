@@ -4,8 +4,6 @@ import { cn } from '@/lib/utils';
 import { Toaster } from '@/components/ui/toaster';
 import Header from '@/components/layout/header';
 import Footer from '@/components/layout/footer';
-import AppWrapper from '@/components/app-wrapper';
-import { AuthProvider } from '@/context/auth-context';
 
 export const metadata: Metadata = {
   title: 'Pandit Connect',
@@ -36,16 +34,12 @@ export default function RootLayout({
           'min-h-screen bg-background font-body antialiased'
         )}
       >
-        <AuthProvider>
-            <AppWrapper>
-            <div className="relative flex min-h-screen flex-col">
-                <Header />
-                <main className="flex-1">{children}</main>
-                <Footer />
-            </div>
-            <Toaster />
-            </AppWrapper>
-        </AuthProvider>
+        <div className="relative flex min-h-screen flex-col">
+          <Header />
+          <main className="flex-1">{children}</main>
+          <Footer />
+        </div>
+        <Toaster />
       </body>
     </html>
   );

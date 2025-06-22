@@ -3,6 +3,10 @@ export interface Priest {
   name: string;
   photo: string;
   photoHint: string;
+  aadhaarPhoto: string;
+  aadhaarPhotoHint: string;
+  selfiePhoto: string;
+  selfiePhotoHint: string;
   location: string;
   city: string;
   services: string[];

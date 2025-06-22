@@ -111,6 +111,7 @@ export function PanditSignupForm() {
               <div className="grid gap-4">
                   <div className="grid gap-2 text-center">
                       <p className="text-sm text-muted-foreground">To ensure trust and safety, we require verification documents. Your information will be kept confidential.</p>
+                      <p className="text-xs text-muted-foreground italic">Please note: The uploaded documents will be stored securely for our records and internal verification purposes.</p>
                   </div>
                 <div className="grid gap-2">
                   <Label htmlFor="aadhaar">Aadhaar Card</Label>

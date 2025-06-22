@@ -20,6 +20,7 @@ import {
 } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
 import { Check, X, Eye } from 'lucide-react';
 import type { Priest } from '@/types';
 import Image from 'next/image';
@@ -91,14 +92,14 @@ export default function DashboardClient({
                     <Eye className="mr-2 h-4 w-4" /> View Profile
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="sm:max-w-md">
+                <DialogContent className="sm:max-w-2xl">
                   <DialogHeader>
                     <DialogTitle>Pandit Profile: {pandit.name}</DialogTitle>
                     <DialogDescription>
                       Review the complete information submitted for verification.
                     </DialogDescription>
                   </DialogHeader>
-                  <div className="space-y-4 py-4 max-h-[60vh] overflow-y-auto pr-4">
+                  <div className="space-y-4 py-4 max-h-[70vh] overflow-y-auto pr-4">
                     <div className="flex items-center gap-4">
                       <Image
                         src={pandit.photo}
@@ -131,6 +132,35 @@ export default function DashboardClient({
                       <p className="text-sm text-muted-foreground">Phone: {pandit.phone}</p>
                       <p className="text-sm text-muted-foreground">WhatsApp: {pandit.whatsapp}</p>
                     </div>
+                    <div className="pt-4 border-t">
+                      <h4 className="font-semibold mb-2">Verification Documents</h4>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                          <div>
+                              <Label className="text-xs text-muted-foreground">Aadhaar Card</Label>
+                              <div className="relative aspect-video w-full mt-1 overflow-hidden rounded-md border">
+                                  <Image
+                                      src={pandit.aadhaarPhoto}
+                                      alt="Aadhaar Card"
+                                      layout="fill"
+                                      objectFit="contain"
+                                      data-ai-hint={pandit.aadhaarPhotoHint}
+                                  />
+                              </div>
+                          </div>
+                          <div>
+                              <Label className="text-xs text-muted-foreground">Selfie</Label>
+                              <div className="relative aspect-square w-full mt-1 overflow-hidden rounded-md border">
+                                  <Image
+                                      src={pandit.selfiePhoto}
+                                      alt="Selfie"
+                                      layout="fill"
+                                      objectFit="cover"
+                                      data-ai-hint={pandit.selfiePhotoHint}
+                                  />
+                              </div>
+                          </div>
+                      </div>
+                   </div>
                   </div>
                   <DialogFooter className="sm:justify-start gap-2 mt-4">
                     <DialogClose asChild>

@@ -81,6 +81,17 @@ export default function RequestForm() {
               {state.errors?.location && <p className="text-sm font-medium text-destructive">{state.errors.location[0]}</p>}
             </div>
             <div className="space-y-2">
+              <Label htmlFor="mobile">Mobile Number</Label>
+              <Input
+                id="mobile"
+                name="mobile"
+                type="tel"
+                placeholder="e.g., 9876543210"
+                required
+              />
+              {state.errors?.mobile && <p className="text-sm font-medium text-destructive">{state.errors.mobile[0]}</p>}
+            </div>
+            <div className="space-y-2">
               <Label htmlFor="details">Additional Details (Optional)</Label>
               <Textarea
                 id="details"

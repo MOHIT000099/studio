@@ -15,6 +15,7 @@ import {z} from 'genkit';
 const SuggestPriestsInputSchema = z.object({
   service: z.string().describe('The type of service the user is requesting.'),
   location: z.string().describe('The location where the service is needed.'),
+  mobile: z.string().describe('The mobile number of the user requesting the service.'),
 });
 export type SuggestPriestsInput = z.infer<typeof SuggestPriestsInputSchema>;
 
@@ -39,6 +40,7 @@ const prompt = ai.definePrompt({
 
   Service: {{{service}}}
   Location: {{{location}}}
+  User Mobile: {{{mobile}}}
 
   Return a JSON array of priest IDs.
   `, // Ensure the prompt asks for a JSON array of priest IDs

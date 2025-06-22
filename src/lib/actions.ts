@@ -8,6 +8,7 @@ import { redirect } from 'next/navigation';
 const requestSchema = z.object({
   service: z.string().min(3, 'Service description is too short.'),
   location: z.string().min(2, 'Please provide a valid location.'),
+  mobile: z.string().min(10, 'Please provide a valid 10-digit mobile number.').max(15, 'Mobile number is too long.'),
 });
 
 export type FormState = {
@@ -17,6 +18,7 @@ export type FormState = {
   errors?: {
     service?: string[];
     location?: string[];
+    mobile?: string[];
   };
 };
 
@@ -27,6 +29,7 @@ export async function handlePriestRequest(
   const validatedFields = requestSchema.safeParse({
     service: formData.get('service'),
     location: formData.get('location'),
+    mobile: formData.get('mobile'),
   });
 
   if (!validatedFields.success) {
@@ -37,8 +40,8 @@ export async function handlePriestRequest(
   }
   
   try {
-    const { service, location } = validatedFields.data;
-    const result = await suggestPriests({ service, location });
+    const { service, location, mobile } = validatedFields.data;
+    const result = await suggestPriests({ service, location, mobile });
 
     if (!result || !result.suggestedPriests || result.suggestedPriests.length === 0) {
       return { message: 'AI could not find any matching priests. Please try a broader search.' };

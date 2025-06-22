@@ -18,26 +18,31 @@ const firebaseConfig = {
 let app: FirebaseApp;
 let auth: Auth;
 let db: Firestore;
+let firebaseEnabled = false;
 
-// Check if all necessary Firebase config keys are provided
-const firebaseEnabled = !!(
-  firebaseConfig.apiKey &&
-  firebaseConfig.authDomain &&
-  firebaseConfig.projectId
-);
-
-if (firebaseEnabled) {
-  // Initialize Firebase
-  app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
-  auth = getAuth(app);
-  db = getFirestore(app);
-} else {
-  console.warn("Firebase config is missing or incomplete in .env file. Auth and Firestore features will be disabled.");
-  // Provide mock objects to prevent app from crashing
+// This structure is more robust and prevents crashes if config is partially supplied.
+try {
+  if (
+    firebaseConfig.apiKey &&
+    firebaseConfig.authDomain &&
+    firebaseConfig.projectId
+  ) {
+    app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
+    auth = getAuth(app);
+    db = getFirestore(app);
+    firebaseEnabled = true;
+  } else {
+    // This will be caught by the catch block
+    throw new Error("Firebase config values are missing.");
+  }
+} catch (error) {
+    console.warn(
+    "Firebase initialization failed. Auth and Firestore features will be disabled. Please check your .env file."
+  );
   app = {} as FirebaseApp;
   auth = {} as Auth;
   db = {} as Firestore;
+  firebaseEnabled = false;
 }
-
 
 export { app, auth, db, firebaseEnabled };

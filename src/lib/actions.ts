@@ -3,6 +3,7 @@
 import { z } from 'zod';
 import { suggestPriests } from '@/ai/flows/suggest-priests';
 import { allPriests } from '@/data/priests';
+import { redirect } from 'next/navigation';
 
 const requestSchema = z.object({
   service: z.string().min(3, 'Service description is too short.'),
@@ -58,4 +59,11 @@ export async function handlePriestRequest(
     console.error(error);
     return { message: 'An unexpected error occurred while contacting the AI model. Please try again.' };
   }
+}
+
+export async function handleSimpleAuth(prevState: any, formData: FormData) {
+  console.log('Form submitted:', Object.fromEntries(formData.entries()));
+  // In a real app, you would handle auth logic here. For now, we'll just redirect
+  // to show that the form submission is working. A toast could also be used.
+  return redirect('/');
 }

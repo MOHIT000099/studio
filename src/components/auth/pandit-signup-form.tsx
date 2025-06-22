@@ -14,6 +14,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { FileUp, User, BookUser, ShieldCheck } from 'lucide-react';
 import { handleSimpleAuth } from '@/lib/actions';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 export function PanditSignupForm() {
   return (
@@ -71,11 +72,18 @@ export function PanditSignupForm() {
                 <div className="grid grid-cols-2 gap-4">
                       <div className="grid gap-2">
                           <Label htmlFor="city">City</Label>
-                          <Input id="city" name="city" placeholder="Mumbai" required />
+                          <Select name="city" defaultValue="Patna" required>
+                            <SelectTrigger id="city">
+                              <SelectValue placeholder="Select city" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="Patna">Patna</SelectItem>
+                            </SelectContent>
+                          </Select>
                       </div>
                       <div className="grid gap-2">
                           <Label htmlFor="location">Full Location</Label>
-                          <Input id="location" name="location" placeholder="Chembur, Mumbai, Maharashtra" required />
+                          <Input id="location" name="location" placeholder="Kankarbagh, Patna, Bihar" required />
                       </div>
                   </div>
                 <div className="grid gap-2">

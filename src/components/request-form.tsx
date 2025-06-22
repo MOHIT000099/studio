@@ -11,6 +11,7 @@ import PriestCard from './priest-card';
 import { useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Sparkles } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 
 function SubmitButton() {
@@ -72,12 +73,14 @@ export default function RequestForm() {
             </div>
             <div className="space-y-2">
               <Label htmlFor="location">Location</Label>
-              <Input
-                id="location"
-                name="location"
-                placeholder="e.g., Mumbai, Bengaluru"
-                required
-              />
+              <Select name="location" defaultValue="Patna" required>
+                <SelectTrigger id="location">
+                  <SelectValue placeholder="Select a location" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Patna">Patna</SelectItem>
+                </SelectContent>
+              </Select>
               {state.errors?.location && <p className="text-sm font-medium text-destructive">{state.errors.location[0]}</p>}
             </div>
             <div className="space-y-2">

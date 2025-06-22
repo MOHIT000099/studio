@@ -76,9 +76,9 @@ export async function handlePriestRequest(
 }
 
 export async function handleSimpleAuth(formData: FormData) {
-  console.log('Form submitted with photo URLs:', Object.fromEntries(formData.entries()));
+  console.log('Pandit signup form submitted:', Object.fromEntries(formData.entries()));
   // In a real app, you would handle auth logic here, save the user
-  // and the photo URLs to your database.
+  // and process the uploaded files.
   // For now, we'll just redirect to show that the form submission is working.
   return redirect(`/priests`);
 }

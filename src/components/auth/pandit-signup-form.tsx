@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useFormStatus } from 'react-dom';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -17,67 +17,22 @@ import { FileUp, User, BookUser, ShieldCheck, Loader2 } from 'lucide-react';
 import { handleSimpleAuth } from '@/lib/actions';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
-import { useToast } from '@/hooks/use-toast';
-import { storage } from '@/lib/firebase';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+
+function SubmitButton() {
+    const { pending } = useFormStatus();
+    return (
+        <Button type="submit" className="w-full" disabled={pending}>
+            {pending ? (
+                <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Submitting...
+                </>
+            ) : 'Submit for Verification' }
+        </Button>
+    )
+}
 
 export function PanditSignupForm() {
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const { toast } = useToast();
-  const formRef = useRef<HTMLFormElement>(null);
-
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setIsSubmitting(true);
-
-    if (!process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET) {
-      toast({
-        variant: 'destructive',
-        title: 'Configuration Error',
-        description: 'Firebase Storage is not configured. Please add your credentials to the .env file.',
-      });
-      setIsSubmitting(false);
-      return;
-    }
-
-    const formData = new FormData(event.currentTarget);
-    const aadhaarFile = formData.get('aadhaar') as File;
-    const selfieFile = formData.get('selfie') as File;
-
-    if (!aadhaarFile?.size || !selfieFile?.size) {
-      toast({ variant: 'destructive', title: 'Missing Files', description: 'Please upload both Aadhaar and Selfie images.' });
-      setIsSubmitting(false);
-      return;
-    }
-
-    try {
-      const uploadFile = async (file: File, path: string): Promise<string> => {
-        const storageRef = ref(storage, path);
-        const snapshot = await uploadBytes(storageRef, file);
-        return getDownloadURL(snapshot.ref);
-      };
-
-      const aadhaarPromise = uploadFile(aadhaarFile, `verification/${Date.now()}-aadhaar-${aadhaarFile.name}`);
-      const selfiePromise = uploadFile(selfieFile, `verification/${Date.now()}-selfie-${selfieFile.name}`);
-
-      const [aadhaarUrl, selfieUrl] = await Promise.all([aadhaarPromise, selfiePromise]);
-
-      formData.set('aadhaar', aadhaarUrl);
-      formData.set('selfie', selfieUrl);
-
-      await handleSimpleAuth(formData);
-
-      toast({ title: 'Profile Submitted', description: 'Your profile has been submitted for verification successfully!' });
-      formRef.current?.reset();
-
-    } catch (error) {
-      console.error("Error during signup:", error);
-      toast({ variant: 'destructive', title: 'Submission Failed', description: 'There was an error uploading your files. Please try again.' });
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
   return (
     <Card className="mx-auto max-w-xl w-full">
       <CardHeader className="text-center">
@@ -87,7 +42,7 @@ export function PanditSignupForm() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form ref={formRef} onSubmit={handleSubmit}>
+        <form action={handleSimpleAuth}>
           <Tabs defaultValue="personal" className="w-full">
             <TabsList className="grid w-full grid-cols-3">
               <TabsTrigger value="personal">
@@ -192,14 +147,7 @@ export function PanditSignupForm() {
           </Tabs>
           
           <div className="mt-6">
-              <Button type="submit" className="w-full" disabled={isSubmitting}>
-                  {isSubmitting ? (
-                      <>
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Submitting...
-                      </>
-                  ) : 'Submit for Verification' }
-              </Button>
+              <SubmitButton />
           </div>
         </form>
       </CardContent>

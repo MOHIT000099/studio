@@ -17,10 +17,14 @@ import { Separator } from '@/components/ui/separator';
 import { getTranslator } from 'next-intl/server';
 
 export function generateStaticParams() {
-    return allPriests.map((priest) => ({
+  const locales = ['en', 'hi'];
+  return locales.flatMap((locale) =>
+    allPriests.map((priest) => ({
+      locale,
       id: priest.id,
-    }));
-  }
+    }))
+  );
+}
 
 export default async function PriestDetailPage({ params }: { params: { id: string, locale: string } }) {
   const t = await getTranslator(params.locale, 'PriestDetailPage');

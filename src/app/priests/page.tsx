@@ -19,16 +19,18 @@ export default function PriestsPage() {
   const [selectedCity, setSelectedCity] = useState('all');
 
   const filteredPriests = useMemo(() => {
-    return allPriests.filter((priest) => {
-      const matchesSearch = priest.name
-        .toLowerCase()
-        .includes(searchQuery.toLowerCase());
-      const matchesService =
-        selectedService === 'all' || priest.services.includes(selectedService);
-      const matchesCity =
-        selectedCity === 'all' || priest.city === selectedCity;
-      return matchesSearch && matchesService && matchesCity && priest.verified;
-    });
+    return allPriests
+      .filter((priest) => {
+        const matchesSearch = priest.name
+          .toLowerCase()
+          .includes(searchQuery.toLowerCase());
+        const matchesService =
+          selectedService === 'all' || priest.services.includes(selectedService);
+        const matchesCity =
+          selectedCity === 'all' || priest.city === selectedCity;
+        return matchesSearch && matchesService && matchesCity && priest.verified;
+      })
+      .sort((a, b) => b.rating - a.rating);
   }, [searchQuery, selectedService, selectedCity]);
 
   return (

@@ -1,4 +1,4 @@
-import type { Priest } from '@/types';
+import type { Priest, Review } from '@/types';
 
 export const allPriests: Priest[] = [
   {
@@ -16,6 +16,8 @@ export const allPriests: Priest[] = [
     qualifications: 'Jyotish Acharya, Vastu Shastra Certified',
     showQualifications: true,
     featured: true,
+    rating: 4.9,
+    reviews: 120,
   },
   {
     id: '2',
@@ -32,6 +34,8 @@ export const allPriests: Priest[] = [
     qualifications: 'Shastri from Sampurnanand Sanskrit University',
     showQualifications: true,
     featured: true,
+    rating: 4.8,
+    reviews: 85,
   },
   {
     id: '3',
@@ -48,6 +52,8 @@ export const allPriests: Priest[] = [
     qualifications: 'PhD in Sanskrit, specialization in Yajurveda',
     showQualifications: false,
     featured: true,
+    rating: 4.7,
+    reviews: 95,
   },
   {
     id: '4',
@@ -64,6 +70,8 @@ export const allPriests: Priest[] = [
     qualifications: 'Proficient in Telugu and Tamil rituals',
     showQualifications: true,
     featured: false,
+    rating: 4.9,
+    reviews: 72,
   },
   {
     id: '5',
@@ -80,6 +88,8 @@ export const allPriests: Priest[] = [
     qualifications: '15 years experience in Shakta traditions.',
     showQualifications: true,
     featured: false,
+    rating: 4.6,
+    reviews: 58,
   },
   {
     id: '6',
@@ -96,6 +106,8 @@ export const allPriests: Priest[] = [
     qualifications: 'Expert in Gujarati customs and rituals.',
     showQualifications: false,
     featured: false,
+    rating: 4.8,
+    reviews: 110,
   },
   {
     id: '7',
@@ -113,6 +125,8 @@ export const allPriests: Priest[] = [
     qualifications: 'Sangeet Visharad, can perform musical pujas.',
     showQualifications: true,
     featured: false,
+    rating: 4.5,
+    reviews: 40,
   },
    {
     id: '8',
@@ -130,8 +144,45 @@ export const allPriests: Priest[] = [
     qualifications: 'Family has served as royal priests for generations.',
     showQualifications: true,
     featured: false,
+    rating: 4.7,
+    reviews: 60,
   },
 ];
+
+export const allReviews: Review[] = [
+    {
+      id: '1',
+      panditId: '1',
+      name: 'Anjali Sharma',
+      rating: 5,
+      comment: 'Pandit Sharma conducted our wedding ceremony beautifully. His knowledge and calm demeanor made the day very special. Highly recommended!',
+      date: '2 weeks ago',
+    },
+    {
+      id: '2',
+      panditId: '1',
+      name: 'Rohan Mehta',
+      rating: 5,
+      comment: 'We hired Pandit Sharma for our Griha Pravesh puja. He was punctual, professional, and explained all the rituals. A wonderful experience.',
+      date: '1 month ago',
+    },
+    {
+      id: '3',
+      panditId: '2',
+      name: 'Priya Desai',
+      rating: 5,
+      comment: 'Shastri Joshi has a very modern approach while respecting all traditions. He was great with the younger members of our family during the Naamkaran.',
+      date: '3 weeks ago',
+    },
+     {
+      id: '4',
+      panditId: '4',
+      name: 'Lakshmi Rao',
+      rating: 5,
+      comment: 'As a South Indian family living in Patna, it was a blessing to find Pandit Rao. He performed our Upanayanam ceremony with perfect authenticity.',
+      date: '2 months ago',
+    },
+  ];
 
 
 export const allServices = [

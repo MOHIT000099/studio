@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { MapPin, ArrowRight } from 'lucide-react';
+import { MapPin, ArrowRight, Star } from 'lucide-react';
 
 import type { Priest } from '@/types';
 import {
@@ -14,6 +14,7 @@ import {
 } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { StarRating } from './ui/star-rating';
 
 interface PriestCardProps {
   priest: Priest;
@@ -31,6 +32,11 @@ export default function PriestCard({ priest }: PriestCardProps) {
             objectFit="cover"
             data-ai-hint={priest.photoHint}
           />
+           {priest.verified && (
+             <Badge className="absolute top-2 right-2" variant="default">
+                <Star className="h-3 w-3 mr-1" /> Rated {priest.rating}
+              </Badge>
+            )}
         </div>
       </CardHeader>
       <CardContent className="p-4 flex-grow">

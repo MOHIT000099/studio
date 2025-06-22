@@ -14,4 +14,15 @@ export interface Priest {
   qualifications: string;
   showQualifications: boolean;
   featured?: boolean;
+  rating: number;
+  reviews: number;
+}
+
+export interface Review {
+  id: string;
+  panditId: string;
+  name: string;
+  rating: number;
+  comment: string;
+  date: string;
 }

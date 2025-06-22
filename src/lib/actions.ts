@@ -111,3 +111,48 @@ export async function handleContactUpdate(
 
   return { success: true };
 }
+
+const reviewSchema = z.object({
+    panditId: z.string(),
+    name: z.string().min(2, "Name is too short."),
+    email: z.string().email("Please provide a valid email."),
+    rating: z.coerce.number().min(1).max(5),
+    comment: z.string().min(10, "Review is too short.").max(500, "Review is too long."),
+});
+
+export type ReviewFormState = {
+    message: string;
+    errors?: {
+        name?: string[];
+        email?: string[];
+        rating?: string[];
+        comment?: string[];
+    };
+    success: boolean;
+};
+
+export async function handleReviewSubmit(
+    prevState: ReviewFormState,
+    formData: FormData
+): Promise<ReviewFormState> {
+    const validatedFields = reviewSchema.safeParse(
+        Object.fromEntries(formData.entries())
+    );
+
+    if (!validatedFields.success) {
+        return {
+            message: "Validation failed. Please check your inputs.",
+            errors: validatedFields.error.flatten().fieldErrors,
+            success: false,
+        };
+    }
+
+    // In a real app, you would save this to a database.
+    // You would also check if the user's email matches the pandit's email to prevent self-reviews.
+    console.log("New review submitted:", validatedFields.data);
+
+    return {
+        message: "Thank you! Your review has been submitted successfully.",
+        success: true,
+    };
+}

@@ -8,12 +8,15 @@ import {
   CheckCircle,
   Sparkles,
   GraduationCap,
+  Star,
 } from 'lucide-react';
-import { allPriests } from '@/data/priests';
+import { allPriests, allReviews } from '@/data/priests';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
+import { StarRating } from '@/components/ui/star-rating';
+import ReviewForm from '@/components/review-form';
 
 export function generateStaticParams() {
   return allPriests.map((priest) => ({
@@ -23,6 +26,7 @@ export function generateStaticParams() {
 
 export default async function PriestDetailPage({ params }: { params: { id: string } }) {
   const priest = allPriests.find((p) => p.id === params.id);
+  const reviews = allReviews.filter((r) => r.panditId === params.id);
 
   if (!priest) {
     notFound();
@@ -44,6 +48,10 @@ export default async function PriestDetailPage({ params }: { params: { id: strin
                 />
               </div>
               <h1 className="text-3xl font-bold font-headline text-center">{priest.name}</h1>
+              <div className="flex items-center justify-center gap-2 text-muted-foreground mt-2">
+                <StarRating rating={priest.rating} />
+                <span>({priest.reviews} reviews)</span>
+              </div>
               <div className="flex items-center justify-center text-muted-foreground mt-2">
                 <MapPin className="h-4 w-4 mr-2" />
                 <span>{priest.location}</span>
@@ -70,7 +78,7 @@ export default async function PriestDetailPage({ params }: { params: { id: strin
             </CardContent>
           </Card>
         </div>
-        <div className="md:col-span-2">
+        <div className="md:col-span-2 space-y-8">
           <Card>
             <CardHeader>
               <CardTitle className="font-headline text-2xl">About {priest.name}</CardTitle>
@@ -80,7 +88,7 @@ export default async function PriestDetailPage({ params }: { params: { id: strin
             </CardContent>
           </Card>
 
-          <Card className="mt-8">
+          <Card>
             <CardHeader>
               <CardTitle className="font-headline text-2xl flex items-center">
                 <Sparkles className="h-6 w-6 mr-3 text-primary" />
@@ -99,7 +107,7 @@ export default async function PriestDetailPage({ params }: { params: { id: strin
           </Card>
 
           {priest.showQualifications && priest.qualifications && (
-            <Card className="mt-8">
+            <Card>
               <CardHeader>
                 <CardTitle className="font-headline text-2xl flex items-center">
                   <GraduationCap className="h-6 w-6 mr-3 text-primary" />
@@ -111,6 +119,34 @@ export default async function PriestDetailPage({ params }: { params: { id: strin
               </CardContent>
             </Card>
           )}
+
+          <Card>
+            <CardHeader>
+                <CardTitle className="font-headline text-2xl flex items-center">
+                    <Star className="h-6 w-6 mr-3 text-primary" />
+                    User Reviews
+                </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+                {reviews.length > 0 ? (
+                    reviews.map(review => (
+                        <div key={review.id} className="border-b pb-4 last:border-b-0">
+                            <div className="flex items-center justify-between mb-2">
+                                <h3 className="font-semibold">{review.name}</h3>
+                                <StarRating rating={review.rating} />
+                            </div>
+                            <p className="text-muted-foreground text-sm italic mb-2">"{review.comment}"</p>
+                            <p className="text-xs text-muted-foreground/80 text-right">{review.date}</p>
+                        </div>
+                    ))
+                ) : (
+                    <p className="text-muted-foreground text-center py-4">Be the first to review {priest.name}!</p>
+                )}
+            </CardContent>
+          </Card>
+          
+          <ReviewForm panditId={priest.id} />
+
         </div>
       </div>
     </div>

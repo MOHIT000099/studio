@@ -1,6 +1,7 @@
 'use client';
 
-import { useFormState, useFormStatus } from 'react-dom';
+import { useFormStatus } from 'react-dom';
+import { useActionState, useEffect } from 'react';
 import { handlePriestRequest, type FormState } from '@/lib/actions';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -8,7 +9,6 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import PriestCard from './priest-card';
-import { useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Sparkles } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -35,7 +35,7 @@ function SubmitButton() {
 
 export default function RequestForm() {
   const initialState: FormState = { message: '' };
-  const [state, formAction] = useFormState(handlePriestRequest, initialState);
+  const [state, formAction] = useActionState(handlePriestRequest, initialState);
   const { toast } = useToast();
 
   useEffect(() => {

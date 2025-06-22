@@ -1,6 +1,5 @@
 'use client';
 
-import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -120,13 +119,6 @@ export function PanditSignupForm() {
               </Button>
           </div>
         </form>
-
-        <div className="mt-4 text-center text-sm">
-          Already have a pandit account?{' '}
-          <Link href="/login" className="underline">
-            Login
-          </Link>
-        </div>
       </CardContent>
     </Card>
   );

@@ -39,14 +39,6 @@ export default function Header() {
         </nav>
 
         <div className="flex flex-1 items-center justify-end space-x-4">
-          <nav className="hidden md:flex items-center space-x-2">
-            <Button variant="ghost" asChild>
-              <Link href="/login">Login</Link>
-            </Button>
-            <Button asChild>
-              <Link href="/signup">Sign Up</Link>
-            </Button>
-          </nav>
           <Sheet>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon" className="md:hidden">
@@ -73,16 +65,6 @@ export default function Header() {
                     </SheetClose>
                   ))}
                 </nav>
-                <div className="border-t mt-6 pt-6">
-                    <div className="flex flex-col space-y-2">
-                        <SheetClose asChild>
-                            <Link href="/login" className={buttonVariants({ variant: "ghost", className: "w-full" })}>Login</Link>
-                        </SheetClose>
-                        <SheetClose asChild>
-                            <Link href="/signup" className={buttonVariants({ variant: "default", className: "w-full" })}>Sign Up</Link>
-                        </SheetClose>
-                    </div>
-                </div>
               </div>
             </SheetContent>
           </Sheet>

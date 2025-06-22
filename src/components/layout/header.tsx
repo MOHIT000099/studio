@@ -15,6 +15,7 @@ import LanguageSwitcher from '../language-switcher';
 export default function Header() {
   const navLinks = [
     { href: '/priests', label: 'Browse Pandits' },
+    { href: '/how-it-works', label: 'How It Works' },
     { href: '/request', label: 'Submit Request' },
     { href: '/pandit-signup', label: 'Become a Pandit' },
   ];

@@ -1,6 +1,7 @@
 export interface Priest {
-  id: string;
+  id: string; // This will be the UID from Firebase Auth
   name: string;
+  email: string;
   photo: string;
   photoHint: string;
   aadhaarPhoto: string;
@@ -12,7 +13,7 @@ export interface Priest {
   services: string[];
   bio: string;
   phone: string;
-  whatsapp: string;
+  whatsapp?: string; // This field is not in the signup form
   verified: boolean;
   pendingApproval?: boolean;
   qualifications: string;

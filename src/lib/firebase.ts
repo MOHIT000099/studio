@@ -1,6 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp, getApps, getApp, type FirebaseApp } from "firebase/app";
 import { getAuth, type Auth } from "firebase/auth";
+import { getFirestore, type Firestore } from "firebase/firestore";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -16,6 +17,7 @@ const firebaseConfig = {
 
 let app: FirebaseApp;
 let auth: Auth;
+let db: Firestore;
 
 // Check if all necessary Firebase config keys are provided
 const firebaseEnabled = !!(
@@ -28,12 +30,14 @@ if (firebaseEnabled) {
   // Initialize Firebase
   app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
   auth = getAuth(app);
+  db = getFirestore(app);
 } else {
-  console.warn("Firebase config is missing or incomplete in .env file. Auth features will be disabled.");
+  console.warn("Firebase config is missing or incomplete in .env file. Auth and Firestore features will be disabled.");
   // Provide mock objects to prevent app from crashing
   app = {} as FirebaseApp;
   auth = {} as Auth;
+  db = {} as Firestore;
 }
 
 
-export { app, auth, firebaseEnabled };
+export { app, auth, db, firebaseEnabled };

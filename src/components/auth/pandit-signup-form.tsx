@@ -3,7 +3,8 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '@/lib/firebase';
+import { auth, db, firebaseEnabled } from '@/lib/firebase';
+import { doc, setDoc } from 'firebase/firestore';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -42,13 +43,28 @@ export function PanditSignupForm() {
   const { firebaseEnabled } = useAuth();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
-      email: '',
-      password: '',
-      // Add other form fields here if you plan to store them in a database like Firestore
+    name: '',
+    email: '',
+    phone: '',
+    password: '',
+    city: 'Patna',
+    location: '',
+    services: '',
+    qualifications: '',
+    bio: '',
+    showQualifications: true,
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       setFormData({ ...formData, [e.target.name]: e.target.value });
+  }
+
+  const handleSelectChange = (value: string) => {
+    setFormData({ ...formData, city: value });
+  }
+
+  const handleSwitchChange = (checked: boolean) => {
+    setFormData({ ...formData, showQualifications: checked });
   }
 
   const handleSignup = async (e: React.FormEvent) => {
@@ -56,25 +72,39 @@ export function PanditSignupForm() {
     if (!firebaseEnabled) return;
     setLoading(true);
 
-    if (!formData.email || !formData.password) {
-        toast({
-            variant: "destructive",
-            title: "Error",
-            description: "Email and password are required.",
-        });
-        setLoading(false);
-        return;
-    }
-
     try {
-      // In a real app, you would also save the other form data (name, location, etc.) 
-      // to Cloud Firestore after creating the user.
       const userCredential = await createUserWithEmailAndPassword(auth, formData.email, formData.password);
-      console.log('Pandit signed up:', userCredential.user);
+      const user = userCredential.user;
+
+      // Save pandit profile to Firestore
+      await setDoc(doc(db, "pandits", user.uid), {
+        id: user.uid,
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        city: formData.city,
+        location: formData.location,
+        services: formData.services.split(',').map(s => s.trim()).filter(s => s),
+        qualifications: formData.qualifications,
+        bio: formData.bio,
+        showQualifications: formData.showQualifications,
+        // Default values for new profiles
+        verified: false,
+        pendingApproval: true,
+        featured: false,
+        rating: 0,
+        reviews: 0,
+        photo: 'https://placehold.co/400x400.png',
+        photoHint: 'priest portrait',
+        aadhaarPhoto: 'https://placehold.co/400x250.png',
+        aadhaarPhotoHint: 'aadhaar card document',
+        selfiePhoto: 'https://placehold.co/400x400.png',
+        selfiePhotoHint: 'man selfie photo',
+      });
       
       toast({
-          title: 'Signup Successful',
-          description: 'Your account has been created. Welcome!',
+          title: 'Signup Successful!',
+          description: "Your profile has been created and submitted for verification.",
       });
 
       router.push('/pandit-dashboard');
@@ -133,21 +163,21 @@ export function PanditSignupForm() {
                 <div className="grid gap-4">
                     <div className="grid gap-2">
                     <Label htmlFor="full-name">Full Name</Label>
-                    <Input id="full-name" name="full-name" placeholder="Pandit Ramesh Sharma" required />
+                    <Input id="full-name" name="name" placeholder="Pandit Ramesh Sharma" required onChange={handleChange} value={formData.name} />
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                     <div className="grid gap-2">
                         <Label htmlFor="email">Email</Label>
-                        <Input id="email" name="email" type="email" placeholder="pandit@example.com" required onChange={handleChange} />
+                        <Input id="email" name="email" type="email" placeholder="pandit@example.com" required onChange={handleChange} value={formData.email}/>
                     </div>
                     <div className="grid gap-2">
                         <Label htmlFor="phone">Phone Number</Label>
-                        <Input id="phone" name="phone" type="tel" placeholder="+91 98765 43210" required />
+                        <Input id="phone" name="phone" type="tel" placeholder="+91 98765 43210" required onChange={handleChange} value={formData.phone}/>
                     </div>
                     </div>
                     <div className="grid gap-2">
                     <Label htmlFor="password">Create Password</Label>
-                    <Input id="password" name="password" type="password" required onChange={handleChange} />
+                    <Input id="password" name="password" type="password" required onChange={handleChange} value={formData.password} />
                     </div>
                 </div>
                 </TabsContent>
@@ -157,7 +187,7 @@ export function PanditSignupForm() {
                     <div className="grid grid-cols-2 gap-4">
                         <div className="grid gap-2">
                             <Label htmlFor="city">City</Label>
-                            <Select name="city" defaultValue="Patna" required>
+                            <Select name="city" value={formData.city} onValueChange={handleSelectChange} required>
                                 <SelectTrigger id="city">
                                 <SelectValue placeholder="Select city" />
                                 </SelectTrigger>
@@ -168,25 +198,25 @@ export function PanditSignupForm() {
                         </div>
                         <div className="grid gap-2">
                             <Label htmlFor="location">Full Location</Label>
-                            <Input id="location" name="location" placeholder="Kankarbagh, Patna, Bihar" required />
+                            <Input id="location" name="location" placeholder="Kankarbagh, Patna, Bihar" required onChange={handleChange} value={formData.location} />
                         </div>
                     </div>
                     <div className="grid gap-2">
                     <Label htmlFor="services">Services Offered</Label>
-                    <Input id="services" name="services" placeholder="Wedding, Griha Pravesh, Vastu..." required />
+                    <Input id="services" name="services" placeholder="Wedding, Griha Pravesh, Vastu..." required onChange={handleChange} value={formData.services} />
                     <p className="text-xs text-muted-foreground">Separate services with a comma.</p>
                     </div>
                     <div className="grid gap-2">
                     <Label htmlFor="qualifications">Qualifications</Label>
-                    <Textarea id="qualifications" name="qualifications" placeholder="e.g., Jyotish Acharya, Vastu Shastra Certified" required />
+                    <Textarea id="qualifications" name="qualifications" placeholder="e.g., Jyotish Acharya, Vastu Shastra Certified" required onChange={handleChange} value={formData.qualifications} />
                     <p className="text-xs text-muted-foreground">List your degrees, certifications, or specializations.</p>
                     </div>
                     <div className="grid gap-2">
                     <Label htmlFor="bio">About You / Bio</Label>
-                    <Textarea id="bio" name="bio" placeholder="Tell users about your experience and approach." required />
+                    <Textarea id="bio" name="bio" placeholder="Tell users about your experience and approach." required onChange={handleChange} value={formData.bio} />
                     </div>
                     <div className="flex items-center space-x-2 rounded-md border p-3">
-                        <Switch id="show-qualifications" name="show-qualifications" defaultChecked />
+                        <Switch id="show-qualifications" name="showQualifications" checked={formData.showQualifications} onCheckedChange={handleSwitchChange} />
                         <Label htmlFor="show-qualifications" className="flex-1">Show my qualifications publicly on my profile</Label>
                     </div>
                 </div>

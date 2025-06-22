@@ -8,9 +8,19 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Check, X } from 'lucide-react';
+import { Check, X, Eye } from 'lucide-react';
 import type { Priest } from '@/types';
 import Image from 'next/image';
 import { useToast } from '@/hooks/use-toast';
@@ -75,22 +85,70 @@ export default function DashboardClient({
               <Badge variant="secondary">Pending Approval</Badge>
             </TableCell>
             <TableCell className="text-right">
-              <Button
-                variant="ghost"
-                size="icon"
-                className="text-green-600 hover:text-green-700 hover:bg-green-100"
-                onClick={() => handleAction(pandit.name, 'approved')}
-              >
-                <Check className="h-4 w-4" />
-              </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="text-red-600 hover:text-red-700 hover:bg-red-100"
-                onClick={() => handleAction(pandit.name, 'rejected')}
-              >
-                <X className="h-4 w-4" />
-              </Button>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button variant="outline" size="sm">
+                    <Eye className="mr-2 h-4 w-4" /> View Profile
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-md">
+                  <DialogHeader>
+                    <DialogTitle>Pandit Profile: {pandit.name}</DialogTitle>
+                    <DialogDescription>
+                      Review the complete information submitted for verification.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="space-y-4 py-4">
+                    <div className="flex items-center gap-4">
+                      <Image
+                        src={pandit.photo}
+                        alt={pandit.name}
+                        width={100}
+                        height={100}
+                        className="rounded-full border"
+                        data-ai-hint={pandit.photoHint}
+                      />
+                      <div className="space-y-1">
+                        <h3 className="text-lg font-semibold">{pandit.name}</h3>
+                        <p className="text-sm text-muted-foreground">{pandit.location}</p>
+                      </div>
+                    </div>
+                    <div>
+                      <h4 className="font-semibold mb-2">Bio</h4>
+                      <p className="text-sm text-muted-foreground">{pandit.bio}</p>
+                    </div>
+                    <div>
+                      <h4 className="font-semibold mb-2">Services</h4>
+                      <p className="text-sm text-muted-foreground">{pandit.services.join(', ')}</p>
+                    </div>
+                    <div>
+                      <h4 className="font-semibold mb-2">Contact</h4>
+                      <p className="text-sm text-muted-foreground">Phone: {pandit.phone}</p>
+                      <p className="text-sm text-muted-foreground">WhatsApp: {pandit.whatsapp}</p>
+                    </div>
+                  </div>
+                  <DialogFooter className="sm:justify-start gap-2">
+                    <DialogClose asChild>
+                        <Button
+                            type="button"
+                            className="bg-green-600 hover:bg-green-700"
+                            onClick={() => handleAction(pandit.name, 'approved')}
+                        >
+                            <Check className="mr-2 h-4 w-4" /> Approve
+                        </Button>
+                    </DialogClose>
+                    <DialogClose asChild>
+                        <Button
+                            type="button"
+                            variant="destructive"
+                            onClick={() => handleAction(pandit.name, 'rejected')}
+                        >
+                            <X className="mr-2 h-4 w-4" /> Reject
+                        </Button>
+                    </DialogClose>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
             </TableCell>
           </TableRow>
         ))}

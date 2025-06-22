@@ -1,5 +1,6 @@
 import { Mail, Phone } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { contactInfo } from '@/data/contact';
 
 export default function ContactPage() {
   return (
@@ -27,8 +28,8 @@ export default function ContactPage() {
             <div>
               <h3 className="text-lg font-semibold">Phone Support</h3>
               <p className="text-muted-foreground">For direct assistance with booking or finding a pandit, give us a call.</p>
-              <a href="tel:+911234567890" className="text-primary font-medium mt-1 inline-block hover:underline">
-                +91 12345 67890
+              <a href={`tel:${contactInfo.phone}`} className="text-primary font-medium mt-1 inline-block hover:underline">
+                {contactInfo.phone}
               </a>
             </div>
           </div>
@@ -39,8 +40,8 @@ export default function ContactPage() {
             <div>
               <h3 className="text-lg font-semibold">Email Support</h3>
               <p className="text-muted-foreground">For general inquiries, partnership opportunities, or feedback, send us an email.</p>
-              <a href="mailto:support@panditconnect.com" className="text-primary font-medium mt-1 inline-block hover:underline">
-                support@panditconnect.com
+              <a href={`mailto:${contactInfo.email}`} className="text-primary font-medium mt-1 inline-block hover:underline">
+                {contactInfo.email}
               </a>
             </div>
           </div>

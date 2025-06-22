@@ -6,8 +6,10 @@ import {
     CardTitle,
   } from '@/components/ui/card';
 import { allPriests } from '@/data/priests';
+import { contactInfo } from '@/data/contact';
 import DashboardClient from '@/components/admin/dashboard-client';
 import FeaturedPanditsClient from '@/components/admin/featured-pandits-client';
+import ContactInfoClient from '@/components/admin/contact-info-client';
   
 export default async function AdminDashboardPage() {
     // In a real app, this data would be fetched from a database.
@@ -21,9 +23,11 @@ export default async function AdminDashboardPage() {
             Admin Dashboard
             </h1>
             <p className="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto">
-            Manage pandit approvals and feature them on the homepage.
+            Manage pandit approvals, featured pandits, and site contact information.
             </p>
         </div>
+
+        <ContactInfoClient contactInfo={contactInfo} />
   
         <Card>
             <CardHeader>

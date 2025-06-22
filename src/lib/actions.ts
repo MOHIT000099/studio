@@ -81,3 +81,33 @@ export async function handleSimpleAuth(formData: FormData) {
   // to show that the form submission is working. A toast could also be used.
   return redirect(`/priests`);
 }
+
+const contactSchema = z.object({
+  phone: z.string().min(10, 'Please provide a valid phone number.'),
+  email: z.string().email('Please provide a valid email address.'),
+});
+
+export async function handleContactUpdate(
+  formData: FormData
+): Promise<{ success: boolean; message?: string }> {
+  const validatedFields = contactSchema.safeParse({
+    phone: formData.get('phone'),
+    email: formData.get('email'),
+  });
+
+  if (!validatedFields.success) {
+    return {
+      success: false,
+      message:
+        validatedFields.error.flatten().fieldErrors.email?.[0] ||
+        validatedFields.error.flatten().fieldErrors.phone?.[0] ||
+        'Invalid input.',
+    };
+  }
+
+  // In a real application, you would update the database here.
+  // For this prototype, we'll just log it and simulate success.
+  console.log('Updating contact info:', validatedFields.data);
+
+  return { success: true };
+}

@@ -61,7 +61,7 @@ export async function handlePriestRequest(
   }
 }
 
-export async function handleSimpleAuth(prevState: any, formData: FormData) {
+export async function handleSimpleAuth(formData: FormData) {
   console.log('Form submitted:', Object.fromEntries(formData.entries()));
   // In a real app, you would handle auth logic here. For now, we'll just redirect
   // to show that the form submission is working. A toast could also be used.

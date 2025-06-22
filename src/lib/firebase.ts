@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
-import { initializeApp, getApps, getApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
+import { initializeApp, getApps, getApp, type FirebaseApp } from "firebase/app";
+import { getAuth, type Auth } from "firebase/auth";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -14,8 +14,26 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID
 };
 
-// Initialize Firebase
-const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
-const auth = getAuth(app);
+let app: FirebaseApp;
+let auth: Auth;
 
-export { app, auth };
+// Check if all necessary Firebase config keys are provided
+const firebaseEnabled = !!(
+  firebaseConfig.apiKey &&
+  firebaseConfig.authDomain &&
+  firebaseConfig.projectId
+);
+
+if (firebaseEnabled) {
+  // Initialize Firebase
+  app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
+  auth = getAuth(app);
+} else {
+  console.warn("Firebase config is missing or incomplete in .env file. Auth features will be disabled.");
+  // Provide mock objects to prevent app from crashing
+  app = {} as FirebaseApp;
+  auth = {} as Auth;
+}
+
+
+export { app, auth, firebaseEnabled };

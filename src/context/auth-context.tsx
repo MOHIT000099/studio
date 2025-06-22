@@ -3,17 +3,19 @@
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { onAuthStateChanged, User } from 'firebase/auth';
-import { auth } from '@/lib/firebase';
+import { auth, firebaseEnabled } from '@/lib/firebase';
 import { Loader2 } from 'lucide-react';
 
 interface AuthContextType {
   user: User | null;
   loading: boolean;
+  firebaseEnabled: boolean;
 }
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
   loading: true,
+  firebaseEnabled: false,
 });
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
@@ -21,6 +23,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // If firebase is not configured, we don't need to check for a user.
+    if (!firebaseEnabled) {
+      setLoading(false);
+      return;
+    }
+
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setUser(user);
       setLoading(false);
@@ -38,7 +46,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }
 
   return (
-    <AuthContext.Provider value={{ user, loading }}>
+    <AuthContext.Provider value={{ user, loading, firebaseEnabled }}>
       {children}
     </AuthContext.Provider>
   );

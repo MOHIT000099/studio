@@ -16,18 +16,22 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import { Loader2, LogIn } from 'lucide-react';
+import { Loader2, LogIn, AlertTriangle } from 'lucide-react';
 import Link from 'next/link';
+import { useAuth } from '@/context/auth-context';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 export function LoginForm() {
   const router = useRouter();
   const { toast } = useToast();
+  const { firebaseEnabled } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!firebaseEnabled) return;
     setLoading(true);
 
     try {
@@ -62,6 +66,15 @@ export function LoginForm() {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
+          {!firebaseEnabled && (
+            <Alert variant="destructive">
+              <AlertTriangle className="h-4 w-4" />
+              <AlertTitle>Configuration Error</AlertTitle>
+              <AlertDescription>
+                Firebase is not configured. Please add your credentials to the .env file to enable authentication.
+              </AlertDescription>
+            </Alert>
+          )}
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
             <Input
@@ -71,6 +84,7 @@ export function LoginForm() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
+              disabled={!firebaseEnabled}
             />
           </div>
           <div className="space-y-2">
@@ -81,11 +95,12 @@ export function LoginForm() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+              disabled={!firebaseEnabled}
             />
           </div>
         </CardContent>
         <CardFooter className="flex flex-col gap-4">
-          <Button type="submit" className="w-full" disabled={loading}>
+          <Button type="submit" className="w-full" disabled={loading || !firebaseEnabled}>
             {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : 'Login'}
           </Button>
           <p className="text-xs text-muted-foreground text-center">

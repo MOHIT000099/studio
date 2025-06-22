@@ -5,7 +5,8 @@ import {
   Sheet,
   SheetContent,
   SheetTrigger,
-  SheetClose
+  SheetClose,
+  SheetTitle
 } from '@/components/ui/sheet';
 
 export default function Header() {
@@ -54,6 +55,7 @@ export default function Header() {
               </Button>
             </SheetTrigger>
             <SheetContent side="left">
+              <SheetTitle className="sr-only">Menu</SheetTitle>
               <div className="flex flex-col p-4">
                  <Link href="/" className="mr-6 flex items-center space-x-2 mb-6">
                     <BookOpenCheck className="h-6 w-6 text-primary" />

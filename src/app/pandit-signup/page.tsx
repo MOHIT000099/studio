@@ -1,0 +1,9 @@
+import { PanditSignupForm } from "@/components/auth/pandit-signup-form";
+
+export default function PanditSignupPage() {
+    return (
+        <div className="w-full h-full flex items-center justify-center p-4 py-12 md:py-24">
+            <PanditSignupForm />
+        </div>
+    )
+}

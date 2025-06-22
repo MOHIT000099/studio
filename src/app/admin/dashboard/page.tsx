@@ -43,9 +43,9 @@ export default async function AdminDashboardPage() {
 
         <Card>
             <CardHeader>
-                <CardTitle>Manage Featured Pandits</CardTitle>
+                <CardTitle>Manage Pandit Profiles</CardTitle>
                 <CardDescription>
-                    Use the toggle to feature or unfeature a pandit on the home page.
+                    Use the toggle to feature or unfeature a pandit on the home page, and manually adjust their ratings.
                 </CardDescription>
             </CardHeader>
             <CardContent>

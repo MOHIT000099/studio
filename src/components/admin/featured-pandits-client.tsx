@@ -13,7 +13,8 @@ import {
 } from '@/components/ui/table';
 import { Switch } from '@/components/ui/switch';
 import { Input } from '@/components/ui/input';
-import { Search } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Search, Save } from 'lucide-react';
 import Image from 'next/image';
 
 export default function FeaturedPanditsClient({
@@ -26,18 +27,37 @@ export default function FeaturedPanditsClient({
   const [searchQuery, setSearchQuery] = useState('');
 
   const handleFeaturedToggle = (panditId: string, isFeatured: boolean) => {
-    // In a real app, this would be an API call.
-    // Here, we just update local state.
     const updatedPandits = pandits.map(p =>
       p.id === panditId ? { ...p, featured: isFeatured } : p
     );
     setPandits(updatedPandits);
-
     const panditName = updatedPandits.find(p => p.id === panditId)?.name;
-
     toast({
       title: 'Pandit Updated',
       description: `${panditName} has been ${isFeatured ? 'featured' : 'unfeatured'}.`,
+    });
+  };
+  
+  const handleRatingChange = (panditId: string, value: string) => {
+    const newRating = parseFloat(value);
+    setPandits(pandits.map(p =>
+      p.id === panditId ? { ...p, rating: isNaN(newRating) ? p.rating : Math.max(0, Math.min(5, newRating)) } : p
+    ));
+  };
+
+  const handleReviewsChange = (panditId: string, value: string) => {
+    const newReviews = parseInt(value, 10);
+    setPandits(pandits.map(p =>
+      p.id === panditId ? { ...p, reviews: isNaN(newReviews) ? p.reviews : Math.max(0, newReviews) } : p
+    ));
+  };
+  
+  const handleSave = (panditId: string) => {
+    const pandit = pandits.find(p => p.id === panditId);
+    // In a real app, this would be an API call to save the data.
+    toast({
+      title: 'Ratings Saved',
+      description: `Ratings for ${pandit?.name} have been updated.`,
     });
   };
 
@@ -53,7 +73,7 @@ export default function FeaturedPanditsClient({
         <div className="text-center py-16 bg-card rounded-lg">
             <h2 className="text-2xl font-bold font-headline">No Approved Pandits</h2>
             <p className="mt-2 text-muted-foreground">
-                There are no approved pandits to feature yet.
+                There are no approved pandits to feature or manage yet.
             </p>
         </div>
     )
@@ -77,8 +97,10 @@ export default function FeaturedPanditsClient({
           <TableHeader>
             <TableRow>
               <TableHead>Pandit</TableHead>
-              <TableHead>Location</TableHead>
-              <TableHead className="text-right">Feature on Homepage</TableHead>
+              <TableHead>Rating (0-5)</TableHead>
+              <TableHead>Reviews</TableHead>
+              <TableHead>Featured</TableHead>
+              <TableHead className="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -95,11 +117,34 @@ export default function FeaturedPanditsClient({
                         data-ai-hint={pandit.photoHint}
                       />
                     </div>
-                    {pandit.name}
+                    <div>
+                        <div>{pandit.name}</div>
+                        <div className="text-xs text-muted-foreground">{pandit.location}</div>
+                    </div>
                   </div>
                 </TableCell>
-                <TableCell>{pandit.location}</TableCell>
-                <TableCell className="text-right">
+                <TableCell>
+                  <Input
+                    type="number"
+                    step="0.1"
+                    min="0"
+                    max="5"
+                    value={pandit.rating}
+                    onChange={(e) => handleRatingChange(pandit.id, e.target.value)}
+                    className="w-20"
+                  />
+                </TableCell>
+                 <TableCell>
+                  <Input
+                    type="number"
+                    step="1"
+                    min="0"
+                    value={pandit.reviews}
+                    onChange={(e) => handleReviewsChange(pandit.id, e.target.value)}
+                    className="w-24"
+                  />
+                </TableCell>
+                <TableCell>
                   <Switch
                     checked={pandit.featured}
                     onCheckedChange={checked =>
@@ -107,6 +152,11 @@ export default function FeaturedPanditsClient({
                     }
                     aria-label={`Feature ${pandit.name}`}
                   />
+                </TableCell>
+                <TableCell className="text-right">
+                    <Button size="sm" onClick={() => handleSave(pandit.id)}>
+                        <Save className="mr-2 h-4 w-4" /> Save
+                    </Button>
                 </TableCell>
               </TableRow>
             ))}

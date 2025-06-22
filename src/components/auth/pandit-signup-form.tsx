@@ -94,7 +94,7 @@ export function PanditSignupForm() {
                 </div>
                 <div className="grid gap-2">
                   <Label htmlFor="qualifications">Qualifications</Label>
-                  <Textarea id="qualifications" name="qualifications" placeholder="e.g., Jyotish Acharya, Vastu Shastra Certified" />
+                  <Textarea id="qualifications" name="qualifications" placeholder="e.g., Jyotish Acharya, Vastu Shastra Certified" required />
                   <p className="text-xs text-muted-foreground">List your degrees, certifications, or specializations.</p>
                 </div>
                  <div className="grid gap-2">

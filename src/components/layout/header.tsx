@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { BookOpenCheck, Menu } from 'lucide-react';
-import { Button, buttonVariants } from '@/components/ui/button';
+import { Button } from '@/components/ui/button';
 import {
   Sheet,
   SheetContent,
@@ -8,12 +8,15 @@ import {
   SheetClose,
   SheetTitle
 } from '@/components/ui/sheet';
+import { useTranslations } from 'next-intl';
+import LanguageSwitcher from '../language-switcher';
 
 export default function Header() {
+  const t = useTranslations('Header');
   const navLinks = [
-    { href: '/priests', label: 'Browse Pandits' },
-    { href: '/request', label: 'Submit Request' },
-    { href: '/pandit-signup', label: 'Become a Pandit' },
+    { href: '/priests', label: t('browse') },
+    { href: '/request', label: t('request') },
+    { href: '/pandit-signup', label: t('becomeAPandit') },
   ];
 
   return (
@@ -22,7 +25,7 @@ export default function Header() {
         <div className="mr-4 flex">
           <Link href="/" className="mr-6 flex items-center space-x-2">
             <BookOpenCheck className="h-6 w-6 text-primary" />
-            <span className="font-bold font-headline">Pandit Connect</span>
+            <span className="font-bold font-headline">{t('title')}</span>
           </Link>
         </div>
 
@@ -39,6 +42,7 @@ export default function Header() {
         </nav>
 
         <div className="flex flex-1 items-center justify-end space-x-4">
+          <LanguageSwitcher />
           <Sheet>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon" className="md:hidden">
@@ -51,7 +55,7 @@ export default function Header() {
               <div className="flex flex-col p-4">
                  <Link href="/" className="mr-6 flex items-center space-x-2 mb-6">
                     <BookOpenCheck className="h-6 w-6 text-primary" />
-                    <span className="font-bold font-headline">Pandit Connect</span>
+                    <span className="font-bold font-headline">{t('title')}</span>
                  </Link>
                 <nav className="flex flex-col space-y-4">
                   <SheetClose asChild>
@@ -59,7 +63,7 @@ export default function Header() {
                       href="/"
                       className="text-lg font-medium transition-colors hover:text-primary"
                     >
-                      Home
+                      {t('home')}
                     </Link>
                   </SheetClose>
                   {navLinks.map((link) => (

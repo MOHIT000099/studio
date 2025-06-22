@@ -4,6 +4,7 @@ import { z } from 'zod';
 import { suggestPriests } from '@/ai/flows/suggest-priests';
 import { allPriests } from '@/data/priests';
 import { redirect } from 'next/navigation';
+import { getTranslator } from 'next-intl/server';
 
 const requestSchema = z.object({
   service: z.string().min(3, 'Service description is too short.'),
@@ -27,6 +28,9 @@ export async function handlePriestRequest(
   formData: FormData
 ): Promise<FormState> {
   const submitAction = formData.get('submit_action');
+  const locale = formData.get('locale') as 'en' | 'hi' || 'en';
+  const t = await getTranslator(locale, 'Toasts');
+
 
   const validatedFields = requestSchema.safeParse({
     service: formData.get('service'),
@@ -36,7 +40,7 @@ export async function handlePriestRequest(
 
   if (!validatedFields.success) {
     return {
-      message: 'Validation failed. Please check your inputs.',
+      message: t('validationError'),
       errors: validatedFields.error.flatten().fieldErrors,
     };
   }
@@ -45,7 +49,7 @@ export async function handlePriestRequest(
     // In a real app, this would send an email or save to a database.
     console.log('Direct request to admin:', validatedFields.data);
     return {
-      message: 'Your request has been submitted successfully. Our team will contact you shortly.',
+      message: t('requestSuccess'),
       priests: [], // Clear any previous priest suggestions
     };
   }
@@ -55,13 +59,13 @@ export async function handlePriestRequest(
     const result = await suggestPriests({ service, location, mobile });
 
     if (!result || !result.suggestedPriests || result.suggestedPriests.length === 0) {
-      return { message: 'AI could not find any matching priests. Please try a broader search.' };
+      return { message: t('aiNoMatch') };
     }
     
     const suggestedPriestsData = allPriests.filter(p => result.suggestedPriests.includes(p.id) && p.verified);
     
     if (suggestedPriestsData.length === 0) {
-        return { message: 'AI found potential matches, but none are currently available or verified. Please try again later.' };
+        return { message: t('aiNoVerified') };
     }
 
     return {
@@ -71,7 +75,7 @@ export async function handlePriestRequest(
     };
   } catch (error) {
     console.error(error);
-    return { message: 'An unexpected error occurred while contacting the AI model. Please try again.' };
+    return { message: t('aiError') };
   }
 }
 
@@ -79,5 +83,6 @@ export async function handleSimpleAuth(formData: FormData) {
   console.log('Form submitted:', Object.fromEntries(formData.entries()));
   // In a real app, you would handle auth logic here. For now, we'll just redirect
   // to show that the form submission is working. A toast could also be used.
-  return redirect('/priests');
+  const locale = formData.get('locale') || 'en';
+  return redirect(`/${locale}/priests`);
 }

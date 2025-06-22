@@ -13,4 +13,5 @@ export interface Priest {
   pendingApproval?: boolean;
   qualifications: string;
   showQualifications: boolean;
+  featured?: boolean;
 }

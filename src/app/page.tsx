@@ -6,7 +6,7 @@ import PriestCard from '@/components/priest-card';
 import { allPriests } from '@/data/priests';
 
 export default function Home() {
-  const featuredPriests = allPriests.slice(0, 3);
+  const featuredPriests = allPriests.filter((priest) => priest.featured);
 
   return (
     <div className="flex flex-col min-h-screen">

@@ -7,19 +7,21 @@ import {
   } from '@/components/ui/card';
 import { allPriests } from '@/data/priests';
 import DashboardClient from '@/components/admin/dashboard-client';
+import FeaturedPanditsClient from '@/components/admin/featured-pandits-client';
   
 export default async function AdminDashboardPage() {
     // In a real app, this data would be fetched from a database.
     const pendingPandits = allPriests.filter(p => p.pendingApproval);
+    const approvedPandits = allPriests.filter(p => p.verified && !p.pendingApproval);
   
     return (
-      <div className="container py-12 md:py-16">
-        <div className="text-center mb-12">
+      <div className="container py-12 md:py-16 space-y-12">
+        <div className="text-center">
             <h1 className="text-4xl md:text-5xl font-bold font-headline">
             Admin Dashboard
             </h1>
             <p className="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto">
-            Review and manage new pandit registrations.
+            Manage pandit approvals and feature them on the homepage.
             </p>
         </div>
   
@@ -32,6 +34,18 @@ export default async function AdminDashboardPage() {
             </CardHeader>
             <CardContent>
                 <DashboardClient pendingPandits={pendingPandits} />
+            </CardContent>
+        </Card>
+
+        <Card>
+            <CardHeader>
+                <CardTitle>Manage Featured Pandits</CardTitle>
+                <CardDescription>
+                    Use the toggle to feature or unfeature a pandit on the home page.
+                </CardDescription>
+            </CardHeader>
+            <CardContent>
+                <FeaturedPanditsClient approvedPandits={approvedPandits} />
             </CardContent>
         </Card>
       </div>

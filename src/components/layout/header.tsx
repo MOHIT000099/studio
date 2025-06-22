@@ -54,6 +54,14 @@ export default function Header() {
                     <span className="font-bold font-headline">Pandit Connect</span>
                  </Link>
                 <nav className="flex flex-col space-y-4">
+                  <SheetClose asChild>
+                    <Link
+                      href="/"
+                      className="text-lg font-medium transition-colors hover:text-primary"
+                    >
+                      Home
+                    </Link>
+                  </SheetClose>
                   {navLinks.map((link) => (
                     <SheetClose asChild key={link.href}>
                       <Link

@@ -13,11 +13,30 @@ import { useToast } from '@/hooks/use-toast';
 import { Loader2, Sparkles } from 'lucide-react';
 
 
-function SubmitButton() {
-  const { pending } = useFormStatus();
+function AdminSubmitButton() {
+  const { pending, data } = useFormStatus();
+  const isThisAction = data?.get('submit_action') === 'admin';
+
   return (
-    <Button type="submit" className="w-full" disabled={pending}>
-      {pending ? (
+    <Button type="submit" name="submit_action" value="admin" className="w-full" disabled={pending} variant="secondary">
+      {pending && isThisAction ? (
+        <>
+          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+          Submitting...
+        </>
+      ) : (
+        'Submit Request'
+      )}
+    </Button>
+  );
+}
+
+function AiSubmitButton() {
+  const { pending, data } = useFormStatus();
+  const isThisAction = data?.get('submit_action') === 'ai';
+  return (
+    <Button type="submit" name="submit_action" value="ai" className="w-full" disabled={pending}>
+      {pending && isThisAction ? (
         <>
             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
             Finding Priests...
@@ -101,7 +120,10 @@ export default function RequestForm() {
             </div>
           </CardContent>
           <CardFooter>
-            <SubmitButton />
+            <div className="w-full flex flex-col gap-2">
+                <AdminSubmitButton />
+                <AiSubmitButton />
+            </div>
           </CardFooter>
         </form>
       </Card>
@@ -120,9 +142,9 @@ export default function RequestForm() {
         </div>
       )}
 
-      {state.message && !state.priests && !state.errors && (
+      {state.message && (!state.priests || state.priests.length === 0) && !state.errors && (
          <div className="text-center py-16">
-            <h2 className="text-2xl font-bold font-headline">Suggestion Results</h2>
+            <h2 className="text-2xl font-bold font-headline">Request Status</h2>
             <p className="mt-2 text-muted-foreground">{state.message}</p>
         </div>
       )}

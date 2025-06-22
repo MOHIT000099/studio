@@ -26,6 +26,8 @@ export async function handlePriestRequest(
   prevState: FormState,
   formData: FormData
 ): Promise<FormState> {
+  const submitAction = formData.get('submit_action');
+
   const validatedFields = requestSchema.safeParse({
     service: formData.get('service'),
     location: formData.get('location'),
@@ -36,6 +38,15 @@ export async function handlePriestRequest(
     return {
       message: 'Validation failed. Please check your inputs.',
       errors: validatedFields.error.flatten().fieldErrors,
+    };
+  }
+
+  if (submitAction === 'admin') {
+    // In a real app, this would send an email or save to a database.
+    console.log('Direct request to admin:', validatedFields.data);
+    return {
+      message: 'Your request has been submitted successfully. Our team will contact you shortly.',
+      priests: [], // Clear any previous priest suggestions
     };
   }
   

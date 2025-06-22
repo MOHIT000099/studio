@@ -14,14 +14,12 @@ import {
 } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { useTranslations } from 'next-intl';
 
 interface PriestCardProps {
   priest: Priest;
 }
 
 export default function PriestCard({ priest }: PriestCardProps) {
-  const t = useTranslations('PriestCard');
   return (
     <Card className="flex flex-col h-full overflow-hidden transform transition-transform duration-300 hover:scale-105 hover:shadow-xl">
       <CardHeader className="p-0">
@@ -48,14 +46,14 @@ export default function PriestCard({ priest }: PriestCardProps) {
             </Badge>
           ))}
           {priest.services.length > 3 && (
-            <Badge variant="outline">+{priest.services.length - 3} {t('more')}</Badge>
+            <Badge variant="outline">+{priest.services.length - 3} more</Badge>
           )}
         </div>
       </CardContent>
       <CardFooter className="p-4">
         <Button asChild className="w-full">
           <Link href={`/priests/${priest.id}`}>
-            {t('viewProfileButton')} <ArrowRight className="ml-2 h-4 w-4" />
+            View Profile <ArrowRight className="ml-2 h-4 w-4" />
           </Link>
         </Button>
       </CardFooter>

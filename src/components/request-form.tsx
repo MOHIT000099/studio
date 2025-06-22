@@ -11,11 +11,9 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter }
 import PriestCard from './priest-card';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2, Sparkles } from 'lucide-react';
-import { useLocale, useTranslations } from 'next-intl';
 
 
 function AdminSubmitButton() {
-  const t = useTranslations('RequestPage');
   const { pending, data } = useFormStatus();
   const isThisAction = data?.get('submit_action') === 'admin';
 
@@ -24,17 +22,16 @@ function AdminSubmitButton() {
       {pending && isThisAction ? (
         <>
           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-          {t('submitting')}
+          Submitting...
         </>
       ) : (
-        t('submitAdminButton')
+        'Submit Request'
       )}
     </Button>
   );
 }
 
 function AiSubmitButton() {
-  const t = useTranslations('RequestPage');
   const { pending, data } = useFormStatus();
   const isThisAction = data?.get('submit_action') === 'ai';
   return (
@@ -42,12 +39,12 @@ function AiSubmitButton() {
       {pending && isThisAction ? (
         <>
             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-            {t('finding')}
+            Finding Pandits...
         </>
       ) : (
         <>
         <Sparkles className="mr-2 h-4 w-4" />
-        {t('submitAiButton')}
+        Get AI Suggestions
         </>
       )}
     </Button>
@@ -55,9 +52,6 @@ function AiSubmitButton() {
 }
 
 export default function RequestForm() {
-  const t = useTranslations('RequestPage');
-  const tToast = useTranslations('Toasts');
-  const locale = useLocale();
   const initialState: FormState = { message: '' };
   const [state, formAction] = useActionState(handlePriestRequest, initialState);
   const { toast } = useToast();
@@ -66,62 +60,61 @@ export default function RequestForm() {
     if (state.message && state.errors) {
         toast({
             variant: "destructive",
-            title: tToast('errorTitle'),
+            title: 'Error',
             description: state.message,
         });
     }
-  }, [state, toast, tToast]);
+  }, [state, toast]);
 
 
   return (
     <div>
       <Card className="max-w-2xl mx-auto">
         <form action={formAction}>
-          <input type="hidden" name="locale" value={locale} />
           <CardHeader>
-            <CardTitle className="font-headline text-2xl">{t('formTitle')}</CardTitle>
+            <CardTitle className="font-headline text-2xl">Need a Pandit?</CardTitle>
             <CardDescription>
-              {t('formDescription')}
+              Describe the ceremony you need a pandit for, and our AI will suggest the best matches for you.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="service">{t('serviceLabel')}</Label>
+              <Label htmlFor="service">Service or Puja</Label>
               <Input
                 id="service"
                 name="service"
-                placeholder={t('servicePlaceholder')}
+                placeholder="e.g., Wedding Ceremony, Griha Pravesh"
                 required
               />
                {state.errors?.service && <p className="text-sm font-medium text-destructive">{state.errors.service[0]}</p>}
             </div>
             <div className="space-y-2">
-              <Label htmlFor="location">{t('locationLabel')}</Label>
+              <Label htmlFor="location">Location</Label>
               <Input
                 id="location"
                 name="location"
-                placeholder={t('locationPlaceholder')}
+                placeholder="e.g., Kankarbagh, Patna"
                 required
               />
               {state.errors?.location && <p className="text-sm font-medium text-destructive">{state.errors.location[0]}</p>}
             </div>
             <div className="space-y-2">
-              <Label htmlFor="mobile">{t('mobileLabel')}</Label>
+              <Label htmlFor="mobile">Mobile Number</Label>
               <Input
                 id="mobile"
                 name="mobile"
                 type="tel"
-                placeholder={t('mobilePlaceholder')}
+                placeholder="e.g., 9876543210"
                 required
               />
               {state.errors?.mobile && <p className="text-sm font-medium text-destructive">{state.errors.mobile[0]}</p>}
             </div>
             <div className="space-y-2">
-              <Label htmlFor="details">{t('detailsLabel')}</Label>
+              <Label htmlFor="details">Additional Details (Optional)</Label>
               <Textarea
                 id="details"
                 name="details"
-                placeholder={t('detailsPlaceholder')}
+                placeholder="Any specific requirements, languages, or dates."
               />
             </div>
           </CardContent>
@@ -137,8 +130,8 @@ export default function RequestForm() {
       {state.priests && state.priests.length > 0 && (
         <div className="mt-12">
            <div className="text-center mb-8">
-                <h2 className="text-3xl font-bold font-headline">{t('aiRecommendTitle')}</h2>
-                <p className="mt-2 text-muted-foreground">{t('aiRecommendSubtitle')}</p>
+                <h2 className="text-3xl font-bold font-headline">Our AI Recommends</h2>
+                <p className="mt-2 text-muted-foreground">Based on your request, we think these pandits would be a great fit.</p>
             </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {state.priests.map((priest) => (
@@ -150,7 +143,7 @@ export default function RequestForm() {
 
       {state.message && (!state.priests || state.priests.length === 0) && !state.errors && (
          <div className="text-center py-16">
-            <h2 className="text-2xl font-bold font-headline">{t('requestStatusTitle')}</h2>
+            <h2 className="text-2xl font-bold font-headline">Request Status</h2>
             <p className="mt-2 text-muted-foreground">{state.message}</p>
         </div>
       )}

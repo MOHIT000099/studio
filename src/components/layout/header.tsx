@@ -10,15 +10,13 @@ import {
   SheetClose,
   SheetTitle
 } from '@/components/ui/sheet';
-import { useTranslations } from 'next-intl';
 import LanguageSwitcher from '../language-switcher';
 
 export default function Header() {
-  const t = useTranslations('Header');
   const navLinks = [
-    { href: '/priests', label: t('browse') },
-    { href: '/request', label: t('request') },
-    { href: '/pandit-signup', label: t('becomeAPandit') },
+    { href: '/priests', label: 'Browse Pandits' },
+    { href: '/request', label: 'Submit Request' },
+    { href: '/pandit-signup', label: 'Become a Pandit' },
   ];
 
   return (
@@ -27,7 +25,7 @@ export default function Header() {
         <div className="mr-4 flex">
           <Link href="/" className="mr-6 flex items-center space-x-2">
             <BookOpenCheck className="h-6 w-6 text-primary" />
-            <span className="font-bold font-headline">{t('title')}</span>
+            <span className="font-bold font-headline">Pandit Connect</span>
           </Link>
         </div>
 
@@ -57,7 +55,7 @@ export default function Header() {
               <div className="flex flex-col p-4">
                  <Link href="/" className="mr-6 flex items-center space-x-2 mb-6">
                     <BookOpenCheck className="h-6 w-6 text-primary" />
-                    <span className="font-bold font-headline">{t('title')}</span>
+                    <span className="font-bold font-headline">Pandit Connect</span>
                  </Link>
                 <nav className="flex flex-col space-y-4">
                   <SheetClose asChild>
@@ -65,7 +63,7 @@ export default function Header() {
                       href="/"
                       className="text-lg font-medium transition-colors hover:text-primary"
                     >
-                      {t('home')}
+                      Home
                     </Link>
                   </SheetClose>
                   {navLinks.map((link) => (

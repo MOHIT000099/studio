@@ -25,22 +25,19 @@ import type { Priest } from '@/types';
 import Image from 'next/image';
 import { useToast } from '@/hooks/use-toast';
 import { useState } from 'react';
-import { useTranslations } from 'next-intl';
 
 export default function DashboardClient({
   pendingPandits,
 }: {
   pendingPandits: Priest[];
 }) {
-  const t = useTranslations('AdminDashboardPage');
-  const tToast = useTranslations('Toasts');
   const { toast } = useToast();
   const [pandits, setPandits] = useState(pendingPandits);
 
   const handleAction = (panditName: string, action: 'approved' | 'rejected') => {
     toast({
-      title: action === 'approved' ? tToast('panditApproved') : tToast('panditRejected'),
-      description: tToast('panditActionDescription', { name: panditName, action }),
+      title: action === 'approved' ? 'Pandit approved' : 'Pandit rejected',
+      description: `${panditName} has been ${action}.`,
     });
     setPandits(pandits.filter(p => p.name !== panditName));
   };
@@ -48,9 +45,9 @@ export default function DashboardClient({
   if (pandits.length === 0) {
     return (
         <div className="text-center py-16 bg-card rounded-lg">
-            <h2 className="text-2xl font-bold font-headline">{t('allClearTitle')}</h2>
+            <h2 className="text-2xl font-bold font-headline">All Clear!</h2>
             <p className="mt-2 text-muted-foreground">
-                {t('allClearSubtitle')}
+                There are no pending pandit registrations to review.
             </p>
         </div>
     )
@@ -60,10 +57,10 @@ export default function DashboardClient({
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead>{t('panditHeader')}</TableHead>
-          <TableHead>{t('locationHeader')}</TableHead>
-          <TableHead>{t('statusHeader')}</TableHead>
-          <TableHead className="text-right">{t('actionsHeader')}</TableHead>
+          <TableHead>Pandit</TableHead>
+          <TableHead>Location</TableHead>
+          <TableHead>Status</TableHead>
+          <TableHead className="text-right">Actions</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -85,20 +82,20 @@ export default function DashboardClient({
             </TableCell>
             <TableCell>{pandit.location}</TableCell>
             <TableCell>
-              <Badge variant="secondary">{t('pendingStatus')}</Badge>
+              <Badge variant="secondary">Pending Approval</Badge>
             </TableCell>
             <TableCell className="text-right">
               <Dialog>
                 <DialogTrigger asChild>
                   <Button variant="outline" size="sm">
-                    <Eye className="mr-2 h-4 w-4" /> {t('viewProfileButton')}
+                    <Eye className="mr-2 h-4 w-4" /> View Profile
                   </Button>
                 </DialogTrigger>
                 <DialogContent className="sm:max-w-md">
                   <DialogHeader>
-                    <DialogTitle>{t('dialogTitle', {name: pandit.name})}</DialogTitle>
+                    <DialogTitle>Pandit Profile: {pandit.name}</DialogTitle>
                     <DialogDescription>
-                      {t('dialogDescription')}
+                      Review the complete information submitted for verification.
                     </DialogDescription>
                   </DialogHeader>
                   <div className="space-y-4 py-4 max-h-[60vh] overflow-y-auto pr-4">
@@ -117,22 +114,22 @@ export default function DashboardClient({
                       </div>
                     </div>
                     <div>
-                      <h4 className="font-semibold mb-2">{t('bio')}</h4>
+                      <h4 className="font-semibold mb-2">Bio</h4>
                       <p className="text-sm text-muted-foreground">{pandit.bio}</p>
                     </div>
                     <div>
-                      <h4 className="font-semibold mb-2">{t('services')}</h4>
+                      <h4 className="font-semibold mb-2">Services</h4>
                       <p className="text-sm text-muted-foreground">{pandit.services.join(', ')}</p>
                     </div>
                      <div>
-                      <h4 className="font-semibold mb-2">{t('qualifications')}</h4>
-                      <p className="text-sm text-muted-foreground">{pandit.qualifications || t('notProvided')}</p>
-                      <p className="text-xs text-muted-foreground mt-1">{t('publiclyVisible', { visible: pandit.showQualifications ? t('yes') : t('no') })}</p>
+                      <h4 className="font-semibold mb-2">Qualifications</h4>
+                      <p className="text-sm text-muted-foreground">{pandit.qualifications || 'Not provided'}</p>
+                      <p className="text-xs text-muted-foreground mt-1">Publicly visible: {pandit.showQualifications ? 'Yes' : 'No'}</p>
                     </div>
                     <div>
-                      <h4 className="font-semibold mb-2">{t('contact')}</h4>
-                      <p className="text-sm text-muted-foreground">{t('phone')}: {pandit.phone}</p>
-                      <p className="text-sm text-muted-foreground">{t('whatsapp')}: {pandit.whatsapp}</p>
+                      <h4 className="font-semibold mb-2">Contact</h4>
+                      <p className="text-sm text-muted-foreground">Phone: {pandit.phone}</p>
+                      <p className="text-sm text-muted-foreground">WhatsApp: {pandit.whatsapp}</p>
                     </div>
                   </div>
                   <DialogFooter className="sm:justify-start gap-2 mt-4">
@@ -142,7 +139,7 @@ export default function DashboardClient({
                             className="bg-green-600 hover:bg-green-700"
                             onClick={() => handleAction(pandit.name, 'approved')}
                         >
-                            <Check className="mr-2 h-4 w-4" /> {t('approveButton')}
+                            <Check className="mr-2 h-4 w-4" /> Approve
                         </Button>
                     </DialogClose>
                     <DialogClose asChild>
@@ -151,7 +148,7 @@ export default function DashboardClient({
                             variant="destructive"
                             onClick={() => handleAction(pandit.name, 'rejected')}
                         >
-                            <X className="mr-2 h-4 w-4" /> {t('rejectButton')}
+                            <X className="mr-2 h-4 w-4" /> Reject
                         </Button>
                     </DialogClose>
                   </DialogFooter>

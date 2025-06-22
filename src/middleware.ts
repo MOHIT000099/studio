@@ -1,18 +1,11 @@
-import createMiddleware from 'next-intl/middleware';
+import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
  
-export default createMiddleware({
-  // A list of all locales that are supported
-  locales: ['en', 'hi'],
- 
-  // Used when no locale matches
-  defaultLocale: 'en'
-});
+// Middleware is not currently used but this file is kept to avoid breaking builds.
+export function middleware(request: NextRequest) {
+  return NextResponse.next();
+}
  
 export const config = {
-  // Match all pathnames except for
-  // - api (API routes)
-  // - _next/static (static files)
-  // - _next/image (image optimization files)
-  // - favicon.ico (favicon file)
-  matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)']
+  matcher: [],
 };

@@ -17,6 +17,7 @@ export default function Header() {
     { href: '/priests', label: 'Browse Pandits' },
     { href: '/how-it-works', label: 'How It Works' },
     { href: '/request', label: 'Submit Request' },
+    { href: '/contact', label: 'Contact Us' },
     { href: '/pandit-signup', label: 'Become a Pandit' },
   ];
 
@@ -53,12 +54,12 @@ export default function Header() {
             </SheetTrigger>
             <SheetContent side="left">
               <SheetTitle className="sr-only">Menu</SheetTitle>
-              <div className="flex flex-col p-4">
-                 <Link href="/" className="mr-6 flex items-center space-x-2 mb-6">
+              <div className="flex flex-col p-4 h-full">
+                 <Link href="/" className="mr-6 flex items-center space-x-2 mb-8">
                     <BookOpenCheck className="h-6 w-6 text-primary" />
                     <span className="font-bold font-headline">Pandit Connect</span>
                  </Link>
-                <nav className="flex flex-col space-y-4">
+                <nav className="flex flex-col space-y-4 flex-grow">
                   <SheetClose asChild>
                     <Link
                       href="/"
@@ -67,7 +68,7 @@ export default function Header() {
                       Home
                     </Link>
                   </SheetClose>
-                  {navLinks.map((link) => (
+                  {navLinks.slice(0, -1).map((link) => (
                     <SheetClose asChild key={link.href}>
                       <Link
                         href={link.href}
@@ -78,6 +79,15 @@ export default function Header() {
                     </SheetClose>
                   ))}
                 </nav>
+                <div className="mt-auto">
+                    <SheetClose asChild>
+                        <Button asChild className="w-full bg-accent text-accent-foreground hover:bg-accent/90">
+                            <Link href={navLinks[navLinks.length - 1].href}>
+                                {navLinks[navLinks.length - 1].label}
+                            </Link>
+                        </Button>
+                    </SheetClose>
+                </div>
               </div>
             </SheetContent>
           </Sheet>

@@ -1,3 +1,101 @@
+'use client';
+
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '@/lib/firebase';
+import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { useToast } from '@/hooks/use-toast';
+import { Loader2, LogIn } from 'lucide-react';
+import Link from 'next/link';
+
 export function LoginForm() {
-  return null;
+  const router = useRouter();
+  const { toast } = useToast();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      toast({
+        title: 'Login Successful',
+        description: 'Welcome back!',
+      });
+      router.push('/pandit-dashboard');
+    } catch (error: any) {
+      console.error('Login error:', error);
+      toast({
+        variant: 'destructive',
+        title: 'Login Failed',
+        description: error.message || 'An unknown error occurred.',
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <Card className="w-full max-w-sm">
+      <form onSubmit={handleLogin}>
+        <CardHeader className="text-center">
+          <div className="mx-auto bg-primary/20 p-3 rounded-full w-fit">
+            <LogIn className="w-8 h-8 text-primary" />
+          </div>
+          <CardTitle className="text-2xl font-headline mt-4">Pandit Login</CardTitle>
+          <CardDescription>
+            Access your dashboard to manage your profile and requests.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="email">Email</Label>
+            <Input
+              id="email"
+              type="email"
+              placeholder="you@example.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="password">Password</Label>
+            <Input
+              id="password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+        </CardContent>
+        <CardFooter className="flex flex-col gap-4">
+          <Button type="submit" className="w-full" disabled={loading}>
+            {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : 'Login'}
+          </Button>
+          <p className="text-xs text-muted-foreground text-center">
+            Not a pandit yet?{' '}
+            <Link href="/pandit-signup" className="underline hover:text-primary">
+              Sign up here
+            </Link>
+          </p>
+        </CardFooter>
+      </form>
+    </Card>
+  );
 }

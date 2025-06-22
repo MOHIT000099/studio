@@ -1,6 +1,9 @@
 'use client';
 
-import { useFormStatus } from 'react-dom';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '@/lib/firebase';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -14,15 +17,14 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { FileUp, User, BookUser, ShieldCheck, Loader2 } from 'lucide-react';
-import { handleSimpleAuth } from '@/lib/actions';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
+import { useToast } from '@/hooks/use-toast';
 
-function SubmitButton() {
-    const { pending } = useFormStatus();
+function SubmitButton({ isLoading }: { isLoading: boolean }) {
     return (
-        <Button type="submit" className="w-full" disabled={pending}>
-            {pending ? (
+        <Button type="submit" className="w-full" disabled={isLoading}>
+            {isLoading ? (
                 <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     Submitting...
@@ -33,6 +35,58 @@ function SubmitButton() {
 }
 
 export function PanditSignupForm() {
+  const router = useRouter();
+  const { toast } = useToast();
+  const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState({
+      email: '',
+      password: '',
+      // Add other form fields here if you plan to store them in a database like Firestore
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      setFormData({ ...formData, [e.target.name]: e.target.value });
+  }
+
+  const handleSignup = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+
+    if (!formData.email || !formData.password) {
+        toast({
+            variant: "destructive",
+            title: "Error",
+            description: "Email and password are required.",
+        });
+        setLoading(false);
+        return;
+    }
+
+    try {
+      // In a real app, you would also save the other form data (name, location, etc.) 
+      // to Cloud Firestore after creating the user.
+      const userCredential = await createUserWithEmailAndPassword(auth, formData.email, formData.password);
+      console.log('Pandit signed up:', userCredential.user);
+      
+      toast({
+          title: 'Signup Successful',
+          description: 'Your account has been created. Welcome!',
+      });
+
+      router.push('/pandit-dashboard');
+
+    } catch (error: any) {
+      console.error('Signup error:', error);
+      toast({
+        variant: 'destructive',
+        title: 'Signup Failed',
+        description: error.message || 'An unknown error occurred.',
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <Card className="mx-auto max-w-xl w-full">
       <CardHeader className="text-center">
@@ -42,7 +96,7 @@ export function PanditSignupForm() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form action={handleSimpleAuth}>
+        <form onSubmit={handleSignup}>
           <Tabs defaultValue="personal" className="w-full">
             <TabsList className="grid w-full grid-cols-3">
               <TabsTrigger value="personal">
@@ -68,7 +122,7 @@ export function PanditSignupForm() {
                 <div className="grid grid-cols-2 gap-4">
                   <div className="grid gap-2">
                       <Label htmlFor="email">Email</Label>
-                      <Input id="email" name="email" type="email" placeholder="pandit@example.com" required />
+                      <Input id="email" name="email" type="email" placeholder="pandit@example.com" required onChange={handleChange} />
                   </div>
                   <div className="grid gap-2">
                       <Label htmlFor="phone">Phone Number</Label>
@@ -77,7 +131,7 @@ export function PanditSignupForm() {
                 </div>
                 <div className="grid gap-2">
                   <Label htmlFor="password">Create Password</Label>
-                  <Input id="password" name="password" type="password" required />
+                  <Input id="password" name="password" type="password" required onChange={handleChange} />
                 </div>
               </div>
             </TabsContent>
@@ -147,7 +201,7 @@ export function PanditSignupForm() {
           </Tabs>
           
           <div className="mt-6">
-              <SubmitButton />
+              <SubmitButton isLoading={loading} />
           </div>
         </form>
       </CardContent>

@@ -75,14 +75,6 @@ export async function handlePriestRequest(
   }
 }
 
-export async function handleSimpleAuth(formData: FormData) {
-  console.log('Pandit signup form submitted:', Object.fromEntries(formData.entries()));
-  // In a real app, you would handle auth logic here, save the user
-  // and process the uploaded files.
-  // For now, we'll just redirect to show that the form submission is working.
-  return redirect(`/priests`);
-}
-
 const contactSchema = z.object({
   phone: z.string().min(10, 'Please provide a valid phone number.'),
   email: z.string().email('Please provide a valid email address.'),

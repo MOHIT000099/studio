@@ -48,18 +48,22 @@ You need to add the contents of the key file and your project ID as secrets in y
     *   **Secret:** Go back to your Firebase Project Settings (from Step 1.2) and copy your **Project ID** from the "General" tab. Paste it here.
 7.  Click **Add secret**.
 
-### Step 3: Set the Admin Password in Firebase
+### Step 3: Set the Admin Password
 
-Your app's admin section is protected by a password. You must set this as a secret in Firebase App Hosting.
+Your app's admin section is protected by a password. Since setting secrets in the Firebase console requires a paid plan, we'll set the password directly in your app's configuration file, which works on the free plan.
 
-1.  Go to the [Firebase Console](https://console.firebase.google.com/) and select your project.
-2.  In the "Build" menu on the left, click on **App Hosting**.
-3.  Select your backend.
-4.  Go to the **Settings** tab.
-5.  Under "Secret Manager", click **Add secret**.
-    *   **Name:** `ADMIN_PASSWORD`
-    *   **Value:** Enter the password you want to use for the admin panel.
-6.  Click **Save**.
+**Important Security Note:** This method stores your password in your source code. **Ensure your GitHub repository is set to "Private"** to protect it.
+
+1.  Open the `apphosting.yaml` file in the project's main directory.
+2.  Find the `env` section at the bottom of the file.
+3.  Change the placeholder password from `'changeme'` to the password you want to use for the admin panel.
+
+    ```yaml
+    env:
+      - variable: ADMIN_PASSWORD
+        value: 'your-secret-password-here' # <-- Change this line
+    ```
+4.  Save the `apphosting.yaml` file and commit the change.
 
 ### You're All Set!
 

@@ -17,7 +17,7 @@ import {
     async function authenticate(formData: FormData) {
       'use server';
       // In a real app, this would be a secure check against a database.
-      if (formData.get('password') === '1234aryansyatum') {
+      if (formData.get('password') === process.env.ADMIN_PASSWORD) {
         redirect('/admin/dashboard');
       } else {
         redirect('/admin?error=Invalid%20password');

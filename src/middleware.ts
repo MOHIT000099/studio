@@ -1,11 +1,11 @@
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
+import createMiddleware from 'next-intl/middleware';
  
-// Middleware is not currently used but this file is kept to avoid breaking builds.
-export function middleware(request: NextRequest) {
-  return NextResponse.next();
-}
+export default createMiddleware({
+  locales: ['en', 'hi'],
+  defaultLocale: 'en'
+});
  
 export const config = {
-  matcher: [],
+  // Skip all paths that should not be internationalized
+  matcher: ['/((?!api|_next|admin|.*\\..*).*)']
 };

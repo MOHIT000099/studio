@@ -1,8 +1,8 @@
 import RequestForm from '@/components/request-form';
-import { getTranslator } from 'next-intl/server';
+import { getTranslations } from 'next-intl/server';
 
 export default async function RequestPage({params: {locale}}: {params: {locale: string}}) {
-  const t = await getTranslator(locale, 'RequestPage');
+  const t = await getTranslations('RequestPage');
   return (
     <div className="container py-12 md:py-16">
       <div className="text-center mb-12">

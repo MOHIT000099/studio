@@ -7,10 +7,10 @@ import {
   } from '@/components/ui/card';
 import { allPriests } from '@/data/priests';
 import DashboardClient from '@/components/admin/dashboard-client';
-import {getTranslator} from 'next-intl/server';
+import {getTranslations} from 'next-intl/server';
   
 export default async function AdminDashboardPage({params: {locale}}: {params: {locale: string}}) {
-    const t = await getTranslator(locale, 'AdminDashboardPage');
+    const t = await getTranslations('AdminDashboardPage');
     // In a real app, this data would be fetched from a database.
     const pendingPandits = allPriests.filter(p => p.pendingApproval);
   

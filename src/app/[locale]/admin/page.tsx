@@ -11,18 +11,18 @@ import {
   import { Button } from '@/components/ui/button';
   import { redirect } from 'next/navigation';
   import { KeyRound } from 'lucide-react';
-  import {getTranslator} from 'next-intl/server';
+  import {getTranslations} from 'next-intl/server';
   
   export default async function AdminLoginPage({params: {locale}}: {params: {locale: string}}) {
-    const t = await getTranslator(locale, 'AdminLoginPage');
+    const t = await getTranslations('AdminLoginPage');
     
     async function authenticate(formData: FormData) {
       'use server';
       // In a real app, this would be a secure check against a database.
-      if (formData.get('password') === '1234aryansyatum') {
-        redirect('/admin/dashboard');
+      if (formData.get('password') === process.env.ADMIN_PASSWORD) {
+        redirect(`/${locale}/admin/dashboard`);
       } else {
-        redirect('/admin?error=Invalid%20password');
+        redirect(`/${locale}/admin?error=Invalid%20password`);
       }
     }
   

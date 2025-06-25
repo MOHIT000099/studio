@@ -14,7 +14,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { getTranslator } from 'next-intl/server';
+import { getTranslations } from 'next-intl/server';
 
 export function generateStaticParams() {
   const locales = ['en', 'hi'];
@@ -27,7 +27,7 @@ export function generateStaticParams() {
 }
 
 export default async function PriestDetailPage({ params }: { params: { id: string, locale: string } }) {
-  const t = await getTranslator(params.locale, 'PriestDetailPage');
+  const t = await getTranslations('PriestDetailPage');
   const priest = allPriests.find((p) => p.id === params.id);
 
   if (!priest) {

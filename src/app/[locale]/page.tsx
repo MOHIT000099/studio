@@ -1,16 +1,14 @@
-'use client';
-
 import Link from 'next/link';
 import { ArrowRight, BookOpenCheck, CalendarCheck, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import PriestCard from '@/components/priest-card';
 import { allPriests } from '@/data/priests';
-import { useTranslations } from 'next-intl';
+import { getTranslations } from 'next-intl/server';
 
-export default function Home() {
-  const t = useTranslations('HomePage');
-  const featuredPriests = allPriests.slice(0, 3);
+export default async function Home({params: {locale}}: {params: {locale: string}}) {
+  const t = await getTranslations('HomePage');
+  const featuredPriests = allPriests.filter((priest) => priest.featured && priest.verified);
 
   return (
     <div className="flex flex-col min-h-screen">

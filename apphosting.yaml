@@ -8,4 +8,4 @@ runConfig:
 
 env:
   - variable: ADMIN_PASSWORD
-    value: 'changeme'
+    value: '1234aryansystum'

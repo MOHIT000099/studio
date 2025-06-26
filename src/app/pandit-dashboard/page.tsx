@@ -11,32 +11,56 @@ import { useEffect, useState } from 'react';
 import type { Priest } from '@/types';
 import { doc, getDoc } from 'firebase/firestore';
 import { Badge } from '@/components/ui/badge';
+import { useToast } from '@/hooks/use-toast';
 
 export default function PanditDashboardPage() {
   const { user, loading: authLoading } = useAuth();
   const router = useRouter();
+  const { toast } = useToast();
   const [panditData, setPanditData] = useState<Priest | null>(null);
   const [dataLoading, setDataLoading] = useState(true);
 
   useEffect(() => {
     if (user) {
       const fetchPanditData = async () => {
-        const docRef = doc(db, 'pandits', user.uid);
-        const docSnap = await getDoc(docRef);
+        try {
+            const docRef = doc(db, 'pandits', user.uid);
+            const docSnap = await getDoc(docRef);
 
-        if (docSnap.exists()) {
-          setPanditData(docSnap.data() as Priest);
-        } else {
-          // This could happen if signup was interrupted.
-          // You might want to redirect them back to the signup form.
-          console.error('No profile data found for this user.');
+            if (docSnap.exists()) {
+              setPanditData(docSnap.data() as Priest);
+            } else {
+              console.error('No profile data found for this user.');
+              toast({
+                  variant: 'destructive',
+                  title: 'Profile Not Found',
+                  description: 'We could not find your profile data. Please contact support.',
+              })
+              // Redirect to signup or home if profile is missing
+              router.push('/pandit-signup');
+            }
+        } catch (error) {
+            console.error("Error fetching pandit data: ", error);
+             toast({
+                  variant: 'destructive',
+                  title: 'Error Loading Profile',
+                  description: 'There was an issue fetching your data. Please try again later.',
+              })
+        } finally {
+            setDataLoading(false);
         }
-        setDataLoading(false);
       };
 
       fetchPanditData();
     }
-  }, [user]);
+  }, [user, router, toast]);
+  
+  // Redirect non-logged-in users
+  useEffect(() => {
+    if (!authLoading && !user) {
+      router.push('/login');
+    }
+  }, [authLoading, user, router]);
 
   if (authLoading || dataLoading) {
     return (
@@ -46,8 +70,8 @@ export default function PanditDashboardPage() {
     );
   }
 
+  // This check prevents rendering the page for users who are being redirected.
   if (!user) {
-    router.push('/login');
     return null;
   }
 

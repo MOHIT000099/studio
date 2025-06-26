@@ -1,6 +1,6 @@
 'use client';
 
-import { useActionState, useEffect, useRef } from 'react';
+import { useActionState, useEffect, useRef, useState } from 'react';
 import { useFormStatus } from 'react-dom';
 import { handlePanditSignup, type PanditSignupFormState } from '@/lib/actions';
 import { Button } from '@/components/ui/button';
@@ -8,6 +8,7 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
@@ -15,10 +16,12 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { FileUp, User, BookUser, ShieldCheck, Loader2 } from 'lucide-react';
+import { FileUp, User, BookUser, ShieldCheck, Loader2, AlertTriangle, CheckCircle } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 import { useToast } from '@/hooks/use-toast';
+import { Alert, AlertDescription, AlertTitle } from '../ui/alert';
+import Link from 'next/link';
 
 function SubmitButton() {
   const { pending } = useFormStatus();
@@ -44,23 +47,45 @@ export function PanditSignupForm() {
   const [state, formAction] = useActionState(handlePanditSignup, initialState);
 
   useEffect(() => {
-    if (state.message) {
-      if (state.success) {
-        toast({
-          title: 'Success!',
-          description: state.message,
-        });
-        formRef.current?.reset();
-      } else {
-        toast({
-          variant: 'destructive',
-          title: 'Error',
-          description: state.message,
-        });
-        formRef.current?.reset();
-      }
+    if (state.message && !state.success) {
+      toast({
+        variant: 'destructive',
+        title: 'Signup Failed',
+        description: state.message,
+      });
     }
   }, [state, toast]);
+  
+  if (state.success) {
+    return (
+        <Card className="mx-auto max-w-xl w-full">
+            <CardHeader className="text-center">
+                <div className="mx-auto bg-green-100 p-4 rounded-full w-fit">
+                    <CheckCircle className="w-12 h-12 text-green-600" />
+                </div>
+                <CardTitle className="text-2xl font-headline mt-4">Registration Successful!</CardTitle>
+                <CardDescription>
+                    {state.message}
+                </CardDescription>
+            </CardHeader>
+            <CardContent>
+                <Alert>
+                    <AlertTriangle className="h-4 w-4" />
+                    <AlertTitle>Next Steps</AlertTitle>
+                    <AlertDescription>
+                        Our team will review your profile. You will receive an email once your profile is approved.
+                        You can then log in to your dashboard.
+                    </AlertDescription>
+                </Alert>
+            </CardContent>
+            <CardFooter>
+                <Button asChild className="w-full">
+                    <Link href="/login">Go to Login Page</Link>
+                </Button>
+            </CardFooter>
+        </Card>
+    )
+  }
 
   return (
     <Card className="mx-auto max-w-xl w-full">
@@ -71,7 +96,7 @@ export function PanditSignupForm() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form action={formAction} ref={formRef}>
+        <form action={formAction} ref={formRef} noValidate>
           <Tabs defaultValue="personal" className="w-full">
             <TabsList className="grid w-full grid-cols-3">
               <TabsTrigger value="personal">
@@ -120,14 +145,16 @@ export function PanditSignupForm() {
                 <div className="grid grid-cols-2 gap-4">
                   <div className="grid gap-2">
                     <Label htmlFor="city">City</Label>
-                    <Select name="city" defaultValue="Patna" required>
+                    <Select name="city" required>
                       <SelectTrigger id="city">
                         <SelectValue placeholder="Select city" />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="Patna">Patna</SelectItem>
+                        {/* Add other cities if needed */}
                       </SelectContent>
                     </Select>
+                     {state.errors?.city && <p className="text-sm font-medium text-destructive">{state.errors.city[0]}</p>}
                   </div>
                   <div className="grid gap-2">
                     <Label htmlFor="location">Full Location</Label>
@@ -142,7 +169,7 @@ export function PanditSignupForm() {
                   {state.errors?.services && <p className="text-sm font-medium text-destructive">{state.errors.services[0]}</p>}
                 </div>
                 <div className="grid gap-2">
-                  <Label htmlFor="qualifications">Qualifications</Label>
+                  <Label htmlFor="qualifications">Qualifications (Optional)</Label>
                   <Textarea id="qualifications" name="qualifications" placeholder="e.g., Jyotish Acharya, Vastu Shastra Certified" />
                   <p className="text-xs text-muted-foreground">List your degrees, certifications, or specializations.</p>
                 </div>
@@ -161,18 +188,17 @@ export function PanditSignupForm() {
             <TabsContent value="verification" className="mt-6">
                 <div className="grid gap-4">
                     <div className="grid gap-2 text-center">
-                        <p className="text-sm text-muted-foreground">To ensure trust and safety, we require verification documents. Your information will be kept confidential.</p>
-                        <p className="text-xs text-muted-foreground italic">Please note: The uploaded documents will be stored securely for our records and internal verification purposes.</p>
+                        <p className="text-sm text-muted-foreground">To ensure trust and safety, we require verification documents. For this prototype, you can upload any image.</p>
                     </div>
                     <div className="grid gap-2">
-                    <Label htmlFor="aadhaar">Aadhaar Card</Label>
+                    <Label htmlFor="aadhaar">Aadhaar Card (Image)</Label>
                     <div className="flex items-center gap-2">
                         <Input id="aadhaar" name="aadhaar" type="file" required className="flex-1" accept="image/*"/>
                         <Button variant="outline" size="icon" asChild><Label htmlFor="aadhaar" className="cursor-pointer"><FileUp className="h-4 w-4"/></Label></Button>
                     </div>
                     </div>
                     <div className="grid gap-2">
-                    <Label htmlFor="selfie">Selfie Photo</Label>
+                    <Label htmlFor="selfie">Selfie Photo (Image)</Label>
                     <div className="flex items-center gap-2">
                         <Input id="selfie" name="selfie" type="file" required className="flex-1" accept="image/*"/>
                         <Button variant="outline" size="icon" asChild><Label htmlFor="selfie" className="cursor-pointer"><FileUp className="h-4 w-4"/></Label></Button>

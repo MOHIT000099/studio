@@ -42,11 +42,17 @@ export function LoginForm() {
       });
       router.push('/pandit-dashboard');
     } catch (error: any) {
+      let errorMessage = 'An unknown error occurred.';
+      if (error.code === 'auth/invalid-credential') {
+          errorMessage = 'Invalid email or password. Please try again.';
+      } else if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+          errorMessage = 'Invalid email or password. Please try again.';
+      }
       console.error('Login error:', error);
       toast({
         variant: 'destructive',
         title: 'Login Failed',
-        description: error.message || 'An unknown error occurred.',
+        description: errorMessage,
       });
     } finally {
       setLoading(false);
@@ -84,7 +90,7 @@ export function LoginForm() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              disabled={!firebaseEnabled}
+              disabled={!firebaseEnabled || loading}
             />
           </div>
           <div className="space-y-2">
@@ -95,7 +101,7 @@ export function LoginForm() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              disabled={!firebaseEnabled}
+              disabled={!firebaseEnabled || loading}
             />
           </div>
         </CardContent>

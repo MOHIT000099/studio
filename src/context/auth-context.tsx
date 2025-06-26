@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
@@ -37,13 +36,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     return () => unsubscribe();
   }, []);
 
-  if (loading) {
-    return (
-        <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-background">
-            <Loader2 className="h-12 w-12 animate-spin text-primary" />
-        </div>
-    )
-  }
+  // We don't show a loader here anymore because individual pages
+  // that need auth will handle their own loading states.
+  // This prevents a full-screen loader on every page load.
 
   return (
     <AuthContext.Provider value={{ user, loading, firebaseEnabled }}>

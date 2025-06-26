@@ -57,6 +57,7 @@ export function PanditSignupForm() {
           title: 'Error',
           description: state.message,
         });
+        formRef.current?.reset();
       }
     }
   }, [state, toast]);
